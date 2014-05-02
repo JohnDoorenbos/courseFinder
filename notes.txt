@@ -1,0 +1,58 @@
+USE WTForms
+
+Also use flask plugins for boot strap and stuff. Might have to putter around with that a bit. 
+
+
+
+
+
+What are questions we have about the project?
+
+Too big?
+
+Where can we get our information from? 
+Professors - Is there a database of professors (maybe with bios)that we can grab?
+Classes - Every Semester, this changes, so we can't hardcode a class schedule in.
+   What would be great is if there is something that has all of next semesters classes, times and professors that we could get access to. 
+
+Getting information:
+  writte pyhton scrtip using URLLIB  (beautiful soup [grab from registrars web page] some guy Doug)
+
+Python module getting text out of PDF.
+
+
+
+
+
+Databases:
+
+Professor:
+ Name
+ Bio
+ Department
+ 
+ One to many relationship with Ratings
+ Many to Many with courses
+
+Course:
+ Name
+ Department
+ Number
+ Description 
+ Gen Ed Requirements
+ Pre -Reqs
+ Times offered?
+ Many to many relationship with professors
+ 
+ 
+Ratings:
+ Star Count
+ review:
+ reported
+ upvotes
+ downvotes
+ 
+
+
+
+(Build your own Web API for the site)
