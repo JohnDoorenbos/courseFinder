@@ -2,7 +2,7 @@ from flask import Flask, render_template, session, request
 from flask_bootstrap import Bootstrap
 from flask_wtf import Form
 from wtforms import TextField, BooleanField, validators 
-
+from flask.ext.sqlalchemy import SQLAlchemy
 
 
 class My_Form(Form): #Is this good for a variable name?
@@ -10,13 +10,15 @@ class My_Form(Form): #Is this good for a variable name?
     department = BooleanField('Spring 2014')#, [validators.Required()])
     
     
-
-
-
-    
 app = Flask(__name__)
 Bootstrap(app)
 app.secret_key = "luther"
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+db = SQLAlchemy(app)
+
+
 @app.route('/courseFinder')
 def forms_page():
     form = My_Form()
