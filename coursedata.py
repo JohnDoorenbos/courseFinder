@@ -12,6 +12,7 @@ def parse_coursetitle(text,course):
     keys respectively'''
 
     match = re.match('^([a-zA-Z]+) (\d{3}[\d/, ]*.?) (.*?)$', text)
+    course['id'] = match.group(1) + ' ' + match.group(2)
     course['dept'] = match.group(1)
     course['number'] = match.group(2)
     course['title'] = match.group(3)
@@ -80,15 +81,20 @@ def parse_coursedescriptions(text,course):
 def post_process(course):
     #performs misc post processing on courses
 
-    #removes '.' from end of 'sameas' if present
+    #removes '.' from end of 'sameas' if present, and converts sameas
+    #into str of a list
     if 'sameas' in course:
         if course['sameas'][-1] == '.':
             course['sameas'] = course['sameas'][:-1]
+        course['sameas'] = str(course['sameas'].split(' and '))
 
     #removes 'Note: ...' geneds that were incorrectly caught by re
+    #otherwise splits geneds into list, and stores the str of that list
     if 'geneds' in course:
         if 'Note:' in course['geneds']:
             del course['geneds']
+        else:
+            course['geneds'] = str(course['geneds'].split(', '))
 
     return course
 
@@ -139,21 +145,21 @@ def main():
     #test function, gets course data and prints it
     course_data = get_course_data()
     for course in course_data:
-        '''print 'dept:', course['dept']
+        print 'id:', course['id']
+        print 'dept:', course['dept']
         print 'number:', course['number']
         print 'title:', course['title']
         if 'hours' in course:
             print 'hours:', course['hours']
         if 'desc' in course:
-            print 'desc:', course['desc']'''
-        #if 'prereqs' in course:
-        #    print 'prereqs:', course['prereqs']
-        #if 'sameas' in course:
-        #    print 'sameas:', course['sameas']
+            print 'desc:', course['desc']
+        if 'prereqs' in course:
+            print 'prereqs:', course['prereqs']
+        if 'sameas' in course:
+            print 'sameas:', course['sameas']
         if 'geneds' in course:
             print 'geneds:', course['geneds']
-        #print ''
-        pass
+        print ''
 
 if __name__ == '__main__':
     main()
