@@ -105,7 +105,7 @@ def post_process(course):
     #geneds from the list, and stores the str of the list as gen_eds
     if 'gen_eds' in course:
         if 'Note:' in course['gen_eds']:
-            del course['gen_eds']
+            course['gen_eds'] = '[]'
         else:
             course['gen_eds'] = course['gen_eds'].split(', ')
 
@@ -180,17 +180,13 @@ def main():
         print 'dept:', course['dept']
         print 'number:', course['number']
         print 'title:', course['title']
-        if 'hours' in course:
-            print 'hours:', course['hours']
-        if 'desc' in course:
-            print 'desc:', course['desc']
-        if 'prereqs' in course:
-            print 'prereqs:', course['prereqs']
-        if 'same_as' in course:
-            print 'same_as:', course['same_as']
-        if 'gen_eds' in course:
-            print 'gen_eds:', course['gen_eds']
+        print 'hours:', course['hours']
+        print 'desc:', course['desc']
+        print 'prereqs:', course['prereqs']
+        print 'same_as:', course['same_as']
+        print 'gen_eds:', course['gen_eds']
         print ''
+        pass
 
 if __name__ == '__main__':
     main()
