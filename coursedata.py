@@ -89,13 +89,31 @@ def post_process(course):
         course['same_as'] = str(course['same_as'].split(' and '))
 
     #removes 'Note: ...' geneds that were incorrectly caught by re
-    #otherwise splits geneds into list, and stores the str of that list
+    #otherwise splits geneds into list, then remove 'S', 'R' and 'W'
+    #geneds from the list, and stores the str of the list as gen_eds
     if 'gen_eds' in course:
         if 'Note:' in course['gen_eds']:
             del course['gen_eds']
         else:
-            course['gen_eds'] = str(course['gen_eds'].split(', '))
+            course['gen_eds'] = course['gen_eds'].split(', ')
 
+            try:
+                course['gen_eds'].remove('R')
+            except:
+                pass
+            try:
+                course['gen_eds'].remove('S')
+            except:
+                pass
+            try:
+                course['gen_eds'].remove('W')
+            except:
+                pass
+
+            if course['gen_eds'] == []:
+                del course['gen_eds']
+            else:
+                course['gen_eds'] = str(course['gen_eds'])
     return course
 
 def get_course_data():
