@@ -12,6 +12,7 @@ def parse_coursetitle(text,course):
     keys respectively'''
 
     match = re.match('^([a-zA-Z]+) (\d{3}[\d/, ]*.?) (.*?)$', text)
+    course['id'] = match.group(1) + ' ' + match.group(2)
     course['dept'] = match.group(1)
     course['number'] = match.group(2)
     course['title'] = match.group(3)
@@ -48,26 +49,26 @@ def parse_coursedescriptions(text,course):
         course['prereqs'] = match.group(2)
 
         if ')' in match.group(3):
-            course['sameas'] = match.group(3)[ 8 : match.group(3).index(')') ]
-            course['geneds'] = match.group(3)[ match.group(3).index('(')+1 : ]
+            course['same_as'] = match.group(3)[ 8 : match.group(3).index(')') ]
+            course['gen_eds'] = match.group(3)[ match.group(3).index('(')+1 : ]
         elif 'Same' in match.group(3):
-            course['sameas'] = match.group(3)[8:]
+            course['same_as'] = match.group(3)[8:]
         else:
-            course['geneds'] = match.group(3)
+            course['gen_eds'] = match.group(3)
 
     elif match2: #no prereqs, but has sameas and maybe geneds
         match = match2
         course['desc'] = match.group(1)
         if ')' in match.group(2):
-            course['sameas'] = match.group(2)[ 8 : match.group(2).index(')') ]
-            course['geneds'] = match.group(2)[ match.group(2).index('(')+1 : ]
+            course['same_as'] = match.group(2)[ 8 : match.group(2).index(')') ]
+            course['gen_eds'] = match.group(2)[ match.group(2).index('(')+1 : ]
         else:
-            course['sameas'] = match.group(2)[8:]
+            course['same_as'] = match.group(2)[8:]
 
     elif match3: #no prereqs, has geneds
         match = match3
         course['desc'] = match.group(1)
-        course['geneds'] = match.group(2)
+        course['gen_eds'] = match.group(2)
 
     elif match4: #has prereqs, but not sameas or geneds
         match = match4
@@ -80,15 +81,20 @@ def parse_coursedescriptions(text,course):
 def post_process(course):
     #performs misc post processing on courses
 
-    #removes '.' from end of 'sameas' if present
-    if 'sameas' in course:
-        if course['sameas'][-1] == '.':
-            course['sameas'] = course['sameas'][:-1]
+    #removes '.' from end of 'sameas' if present, and converts sameas
+    #into str of a list
+    if 'same_as' in course:
+        if course['same_as'][-1] == '.':
+            course['same_as'] = course['same_as'][:-1]
+        course['same_as'] = str(course['same_as'].split(' and '))
 
     #removes 'Note: ...' geneds that were incorrectly caught by re
-    if 'geneds' in course:
-        if 'Note:' in course['geneds']:
-            del course['geneds']
+    #otherwise splits geneds into list, and stores the str of that list
+    if 'gen_eds' in course:
+        if 'Note:' in course['gen_eds']:
+            del course['gen_eds']
+        else:
+            course['gen_eds'] = str(course['gen_eds'].split(', '))
 
     return course
 
@@ -139,21 +145,23 @@ def main():
     #test function, gets course data and prints it
     course_data = get_course_data()
     for course in course_data:
-        print 'Dept:', course['dept']
-        print 'Number:', course['number']
-        print 'Title:', course['title']
+        print 'id:', course['id']
+        print 'dept:', course['dept']
+        print 'number:', course['number']
+        print 'title:', course['title']
+
         if 'hours' in course:
             print 'Hours:', course['hours']
         if 'desc' in course:
-            print 'Desc:', course['desc']
+            print 'desc:', course['desc']
         if 'prereqs' in course:
-            print 'Prereqs:', course['prereqs']
-        if 'sameas' in course:
-            print 'Sameas:', course['sameas']
-        if 'geneds' in course:
-            print 'Geneds:', course['geneds']
-        #print ''
-        pass
+            print 'prereqs:', course['prereqs']
+        if 'same_as' in course:
+            print 'same_as:', course['same_as']
+        if 'gen_eds' in course:
+            print 'gen_eds:', course['gen_eds']
+        print ''
+
 
 if __name__ == '__main__':
     main()
