@@ -1,7 +1,7 @@
 from config import *
 from coursedata import get_course_data
 
-courses = get_course_data()
+course_data = get_course_data()
 
 course_offerings = db.Table('course_offerings',
                             db.Column('course_id',db.Text, db.ForeignKey('courses.id')),
@@ -12,7 +12,7 @@ course_offerings = db.Table('course_offerings',
 class Course(db.Model):
     __tablename__ = "courses"
     title = db.Column(db.Text)
-    dpt = db.Column(db.Text)
+    dept = db.Column(db.Text)
     number = db.Column(db.Text)
     desc  = db.Column(db.Text)
     hours = db.Column(db.Text)
@@ -21,9 +21,9 @@ class Course(db.Model):
     id = db.Column(db.Text, primary_key = True)
     professors = db.relationship("Professor",secondary = course_offerings)
     same_as = db.Column(db.Text)
-    def __init__(self, title, dpt, number, desc, gen_eds, prereqs, id, professors, hours, same_as):
+    def __init__(self, title, dept, number, desc, gen_eds, prereqs, id, professors, hours, same_as):
         self.title = title
-        self.dpt = dpt
+        self.dept = dept
         self.number = number
         self.desc = desc
         self.hours = hours
@@ -49,13 +49,15 @@ class Professor(db.Model):
 db.drop_all()
 db.create_all()
 
-#make the db 
+#make the db
+for course in course_data:
+    c1  = Course(title = course["title"], dept = course["dept"], number = course["number"], desc = course["desc"],  hours = course["hours"], gen_eds = course["gen_eds"], prereqs = course["prereqs"], professors = [], same_as = course["same_as"], id = course["id"])
 
-
-c1 = Course(title = "Intro to Bib", dpt = "Religion", number = "3025", desc = "NOTHING TO KNOW", gen_eds = "REL", prereqs = "None", professors = [], hours = "4", same_as = "None", id = "CS 4465")
+'''
+c1 = Course(title = "Intro to Bib", dept = "Religion", number = "3025", desc = "NOTHING TO KNOW", gen_eds = "REL", prereqs = "None", professors = [], hours = "4", same_as = "None", id = "CS 4465")
 
 c2 = Course(title = "Global Politics", dpt = "Politics", number = "3467", desc = "Fun class!", gen_eds = "POLS", prereqs = "None", professors = [], hours = "2", same_as = "Cows", id = "POLS 4465")
-
+'''
 db.session.add(c1)
 
 db.session.commit()
