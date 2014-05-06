@@ -139,19 +139,19 @@ def main():
     #test function, gets course data and prints it
     course_data = get_course_data()
     for course in course_data:
-        '''print 'dept:', course['dept']
-        print 'number:', course['number']
-        print 'title:', course['title']
+        print 'Dept:', course['dept']
+        print 'Number:', course['number']
+        print 'Title:', course['title']
         if 'hours' in course:
-            print 'hours:', course['hours']
+            print 'Hours:', course['hours']
         if 'desc' in course:
-            print 'desc:', course['desc']'''
-        #if 'prereqs' in course:
-        #    print 'prereqs:', course['prereqs']
-        #if 'sameas' in course:
-        #    print 'sameas:', course['sameas']
+            print 'Desc:', course['desc']
+        if 'prereqs' in course:
+            print 'Prereqs:', course['prereqs']
+        if 'sameas' in course:
+            print 'Sameas:', course['sameas']
         if 'geneds' in course:
-            print 'geneds:', course['geneds']
+            print 'Geneds:', course['geneds']
         #print ''
         pass
 

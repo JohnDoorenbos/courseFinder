@@ -17,6 +17,8 @@ class Course(db.Model):
         self.pre_reqs = pre_reqs
         self.professors = professors
 
+
+
 class Professor(db.Model):
     __table__ = "professors"
     name =  db.column(db.Text, primary_key = True)
@@ -32,8 +34,8 @@ class Professor(db.Model):
 
 
 
-
 course_offerings = db.Table('course_offerings',
                             db.Column('course_name',db.Integer, db.ForeignKey('courses.name')),
                             db.Column('prof_name',db.Integer, db.ForeignKey('professors.name'))
                                 
+
