@@ -79,7 +79,17 @@ def parse_coursedescriptions(text,course):
         course['desc'] = text
 
 def post_process(course):
-    #performs misc post processing on courses
+    #performs misc post processing on courses, including
+    #assigning appropriate values for missing keys
+
+    if 'hours' not in course:
+        course['hours'] = 'N/A'
+
+    if 'desc' not in course:
+        course['desc'] = 'N/A'
+
+    if 'prereqs' not in course:
+        course['prereqs'] = 'N/A'
 
     #removes '.' from end of 'sameas' if present, and converts sameas
     #into str of a list
@@ -87,6 +97,8 @@ def post_process(course):
         if course['same_as'][-1] == '.':
             course['same_as'] = course['same_as'][:-1]
         course['same_as'] = str(course['same_as'].split(' and '))
+    else:
+        course['same_as'] = '[]'
 
     #removes 'Note: ...' geneds that were incorrectly caught by re
     #otherwise splits geneds into list, then remove 'S', 'R' and 'W'
@@ -110,10 +122,11 @@ def post_process(course):
             except:
                 pass
 
-            if course['gen_eds'] == []:
-                del course['gen_eds']
-            else:
-                course['gen_eds'] = str(course['gen_eds'])
+            course['gen_eds'] = str(course['gen_eds'])
+
+    else: #so 'gen_eds' not in course
+        course['gen_eds'] = '[]'
+
     return course
 
 def get_course_data():
