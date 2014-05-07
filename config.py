@@ -10,5 +10,5 @@ Bootstrap(app)
 app.secret_key = "luther"
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/CF.db'
 db = SQLAlchemy(app)
