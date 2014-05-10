@@ -56,3 +56,10 @@ Ratings:
 
 
 (Build your own Web API for the site)
+
+
+
+flask-migration
+flask-login
+
+more plugins!

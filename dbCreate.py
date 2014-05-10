@@ -3,6 +3,8 @@ from coursedata import get_course_data
 
 course_data = get_course_data()
 
+
+#eventually we may want to make this it's own class
 course_offerings = db.Table('course_offerings',
                             db.Column('course_id',db.Text, db.ForeignKey('courses.id')),
                             db.Column('prof_name',db.Text, db.ForeignKey('professors.name'))
