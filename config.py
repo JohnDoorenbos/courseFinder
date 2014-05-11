@@ -8,7 +8,13 @@ from flask.ext.sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 Bootstrap(app)
 app.secret_key = "luther"
-
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/CF.db'
 db = SQLAlchemy(app)
+
+dbPath = 'sqlite:////tmp/CF1.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = dbPath
+
+
+
+
+
+
