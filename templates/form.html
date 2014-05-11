@@ -3,9 +3,26 @@
 {% block content %}
 {{ super() }}
 
-<form class="form form-vertical" method="GET" action="/results">  <!--Post not allowed?-->
-  {{form.name.label }} {{ form.name(size=20) }} <br />
-  {{form.department.label}}{{form.department(size=20)}}
-  <input type="submit" value="Go" />
+<form class="form form-vertical" method="GET"><!-- action="/results">  <!--Post not allowed?-->
+  <div>{{form.name.label }}: {{ form.name(size=20) }}</div>
+  {% if form.name.errors %}
+    <ul class="errors">
+    {% for error in form.name.errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+
+  <div>{{form.department.label}} {{form.department(size=20)}}</div>
+  {% if form.department.errors %}
+    <ul class="errors">
+    {% for error in form.department.errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+
+  <div>{{form.submit()}}</div>
+
 </form>
 {% endblock %}
