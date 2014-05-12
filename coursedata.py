@@ -82,6 +82,10 @@ def post_process(course):
     #performs misc post processing on courses, including
     #assigning appropriate values for missing keys
 
+    #changes dept of Paideia courses to conform with other depts
+    if course['dept'] == 'Paideia':
+        course['dept'] = 'PAID'
+
     if 'hours' not in course:
         course['hours'] = 'N/A'
 
@@ -107,8 +111,15 @@ def post_process(course):
         if 'Note:' in course['gen_eds']:
             course['gen_eds'] = '[]'
         else:
+            #fixes '.' typos
+            while '.' in course['gen_eds']:
+                course['gen_eds'] = course['gen_eds'].replace('.',',')
             course['gen_eds'] = course['gen_eds'].split(', ')
 
+            try:
+                course['gen_eds'].remove('E')
+            except:
+                pass
             try:
                 course['gen_eds'].remove('R')
             except:
@@ -119,6 +130,17 @@ def post_process(course):
                 pass
             try:
                 course['gen_eds'].remove('W')
+            except:
+                pass
+            try:
+                course['gen_eds'].remove('Intel')
+            except:
+                pass
+
+            #replace misspelled 'Inctl' with 'Intcl'
+            try:
+                course['gen_eds'].remove('Inctl')
+                course['gen_eds'].append('Intcl')
             except:
                 pass
 
@@ -175,19 +197,25 @@ def get_course_data():
 def main():
     #test function, gets course data and prints it
     course_data = get_course_data()
+    gen_ed_list = []
     for course in course_data:
-        print 'id:', course['id']
-        print 'dept:', course['dept']
-        print 'number:', course['number']
-        print 'title:', course['title']
-        print 'hours:', course['hours']
-        print 'desc:', course['desc']
-        print 'prereqs:', course['prereqs']
-        print 'same_as:', course['same_as']
-        print 'gen_eds:', course['gen_eds']
-        print ''
+        for gen_ed in eval(course['gen_eds']):
+            if gen_ed not in gen_ed_list:
+                gen_ed_list.append(gen_ed)
+        #print 'id:', course['id']
+        #print 'dept:', course['dept']
+        #print 'number:', course['number']
+        #print 'title:', course['title']
+        #print 'hours:', course['hours']
+        #print 'desc:', course['desc']
+        #print 'prereqs:', course['prereqs']
+        #print 'same_as:', course['same_as']
+        #print 'gen_eds:', course['gen_eds']
+        #print ''
         pass
+    print sorted(gen_ed_list)
 
+                        
 
 if __name__ == '__main__':
     main()
