@@ -1,4 +1,7 @@
 from config import *
+from dbSearch import *
+
+session = loadSession()
 
 class My_Form(Form): #Is this good for a variable name?
     name = TextField('Name',[validators.Length(min=4, max=25)])
@@ -27,9 +30,19 @@ def forms_page():
 def results_page():
     return render_template("results.html")
 
-@app.route('/<dept>/<number>')
-def course_page(dept,number):
-    course_id = dept + ' ' + number
+@app.route('/courseFinder/catalog')
+def catalog():
+    #This should have a template that will go through all of the courses and list them (much like the search)
+    return "Contains all courses in the database"
 
+@app.route('/courseFinder/<dept>/<number>')
+def course_page(dept,number):
+    course_id = str(dept + ' ' + number)
+    res = session.query(CourseDB)
+    result = search(id = course_id, ses = res)[0]
+    print(result)
+    return render_template("course.html",result = result)
+    
 if __name__ == "__main__":
     app.run(debug=True)
+

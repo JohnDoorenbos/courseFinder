@@ -1,3 +1,9 @@
+Maybe have a recently visited tab? 
+
+
+
+
+
 USE WTForms
 
 Also use flask plugins for boot strap and stuff. Might have to putter around with that a bit. 
