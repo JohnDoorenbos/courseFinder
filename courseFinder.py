@@ -36,19 +36,28 @@ def forms_page():
         print 'not Request == \'GET\''
         form = MyForm()
 
-    if form.validate():
+    if form.validate_on_submit():
+        print("HOLY COW IT VALIDATED ON SUBMIT")
+        
+    if form.validate(): #javascript evaluator
         print 'form validated'
         return 'Hello, validated form!'
+    
+    
     else:
         print 'form not validated'
         if form.errors:
-            for error in form.errors:
+            for error in form.errors: 
                 print str(error) + ': ' + str(form.errors[error])
         return render_template('form.html',form = form)
 
-@app.route("/results")
+
+
+
+@app.route("/courseFinder/results")
 def results_page():
-    return render_template("results.html")
+    return "In the Results Page"
+    #return render_template("results.html")
 
 @app.route('/courseFinder/catalog')
 def catalog():
