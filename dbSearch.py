@@ -40,8 +40,9 @@ def search( title = None, dept = None, gen_eds = None, prereqs = None, professor
             string += ".filter(CourseDB."+key+".like('%"+params[key]+"%'))" #Some bugs occuring due to the "like()" function
         
         #if key == 'dept':
-            #string += ".filter(CourseDB."+key+"='"+params[key]+"')"
-            #print("here")
+        #    string += ".filter(CourseDB."+key+"='"+params[key]+"')"
+        #    print("here")
+
         #maybe have an if statement for everything but dept. These calls would have the "like()" function
         
                 
