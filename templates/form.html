@@ -1,26 +1,12 @@
 {% extends "base.html" %}
-
 {% block content %}
 {{ super() }}
 
-<form class="form form-vertical" method="GET"><!-- action="/results">  <!--Post not allowed?-->
-  <div>{{form.name.label }}: {{ form.name(size=20) }}</div>
-  {% if form.name.errors %}
-    <ul class="errors">
-    {% for error in form.name.errors %}
-      <li>{{ error }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
+<form class="form form-vertical" method="GET" action="/coursefinder/results">
 
-  <div>{{form.department.label}} {{form.department(size=20)}}</div>
-  {% if form.department.errors %}
-    <ul class="errors">
-    {% for error in form.department.errors %}
-      <li>{{ error }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
+  {% for field in form %}
+    {{render_field(field)}}
+  {% endfor %}
 
   <div><input type="submit" value="Go!"/></div>
 

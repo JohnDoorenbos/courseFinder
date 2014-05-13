@@ -11,30 +11,31 @@ class CourseQueryForm(Form):
     dept = TextField('Department',[validators.Length(min=2, max=5)])
     number = TextField('Course Number',[validators.Length(min=3, max=4)])
     title = TextField('Course Title')
-    gen_ed_bl = BooleanField('BL')
-    gen_ed_hb = BooleanField('HB')
-    gen_ed_hbssm = BooleanField('HBSSM')
-    gen_ed_he = BooleanField('HE')
-    gen_ed_hept = BooleanField('HEPT')
-    gen_ed_hist = BooleanField('Hist')
-    gen_ed_intcl = BooleanField('Intcl')
-    gen_ed_nwl = BooleanField('NWL')
-    gen_ed_nwnl = BooleanField('NWNL')
-    gen_ed_quant = BooleanField('Quant')
-    gen_ed_rel = BooleanField('Rel')
-    gen_ed_skl = BooleanField('Skl')
-    gen_ed_wel = BooleanField('Wel')
+    gen_eds = SelectMultipleField('Gen Ed Fulfillments',
+                                  choices=[('bl','BL'),
+                                           ('hb','HB'),
+                                           ('hbssm','HBSSM'),
+                                           ('he','HE'),
+                                           ('hept','HEPT'),
+                                           ('hist','Hist'),
+                                           ('intcl','Intcl'),
+                                           ('nwl','NWL'),
+                                           ('nwnl','NWNL'),
+                                           ('quant','Quant'),
+                                           ('rel','Rel'),
+                                           ('skl','Skl'),
+                                           ('wel','Wel')])
 
-@app.route('/courseFinder', methods=['POST', 'GET'])
+@app.route('/coursefinder', methods=['POST', 'GET'])
 def forms_page():
     if request.method == 'GET':
         print 'Request == \'GET\''
         print 'request.args:', str([key+': '+request.args[key]
                                     for key in request.args.keys()])
-        form = MyForm(request.args)
+        form = CourseQueryForm(request.args)
     else:
         print 'not Request == \'GET\''
-        form = MyForm()
+        form = CourseQueryForm()
 
     if form.validate_on_submit():
         print("HOLY COW IT VALIDATED ON SUBMIT")
