@@ -1,7 +1,7 @@
 from flask import Flask, render_template, session, request
 from flask_bootstrap import Bootstrap
 #from flask_wtf import Form
-from wtforms import Form, TextField, BooleanField, SubmitField, validators 
+from wtforms import Form, TextField, BooleanField, SubmitField, SelectMultipleField, validators 
 from flask.ext.sqlalchemy import SQLAlchemy
 
     
