@@ -23,8 +23,10 @@ def loadSession():
     Session = sessionmaker(bind=engine)
     session = Session()
     return session
+
+
        
-def search( title = None, dept = None, gen_eds = None, prereqs = None, professors = None, ses = None):
+def search( title = None, dept = None, gen_eds = None, prereqs = None, professors = None, id = None, ses = None):
     '''This method essentially employs the accumlutator method to create a string that looks like an sqlAlchemy query. The string is evaluated in return statement, and a list of DB entries that match the query is returned'''
     temp = locals() #makes a dictionary of all of the parameters
     params = dict(temp) # creates a new dictionary of parameters, this one doesn't change as you add new locals.
@@ -33,9 +35,15 @@ def search( title = None, dept = None, gen_eds = None, prereqs = None, professor
     
     string = "" 
     for key in params:
-        
-        if params[key] and type(params[key]) is str :
+        print(params[key])
+        if params[key] and type(params[key]) is str:# and key != 'dept':
             string += ".filter(CourseDB."+key+".like('%"+params[key]+"%'))" #Some bugs occuring due to the "like()" function
+        
+        #if key == 'dept':
+            string += ".filter(CourseDB."+key+"='"+params[key]+"')"
+            print("here")
+        #maybe have an if statement for everything but dept. These calls would have the "like()" function
+        
                 
     result ="res" + string + ".all()"
     
@@ -62,10 +70,10 @@ if __name__ == "__main__":
     print(search(title = "Introduction", dept = "Rel", gen_eds = "BL", ses = res))
     print("")
     print("")
-    print(search(gen_eds = "HBSSM", ses = res))
+    print(search(dept = "CS", ses = res))
     print("")
     print("")
-    print(search(dept = "Math", ses = res)) 
+    print(search(id = "MATH 110", ses = res)) 
 
 
     
