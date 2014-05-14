@@ -9,12 +9,21 @@
 
   {% for course in lst %}
   
-  {% with link = "/coursefinder/"+course.dept+"/"+course.number %}
+  {% with link = "/coursefinder/catalog/"+course.dept+"/"+course.number %}
     
-  <div> 
-    {{course.id}}:
-    <a href={{link}}>{{course.title}}</a>  
-    
+  <div class="result"> 
+    {{course.id}}: <a href={{link}}>{{course.title}}</a>  
+    <div class="details">
+      <p>General Education Fulfillments:
+	
+	
+        {% for gen in course.gen_eds%}
+        {{gen}} 
+	{% endfor %} </p>
+	
+	
+      <p>Credit Hours: {{course.hours}}</p>
+    </div>
   </div> <br />
   {% endwith %}
   {% endfor %}

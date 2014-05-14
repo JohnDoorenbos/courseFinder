@@ -1,7 +1,7 @@
 from config import *
 from dbSearch import *
 
-session = loadSession()
+dbsession = loadSession()
 
 
 
@@ -28,10 +28,10 @@ class CourseQueryForm(Form):
 
 
 
-@app.route("/coursefinder/results",methods=['POST','GET'])
-def results_page():
+@app.route("/coursefinder/results")
+def results_page(methods=['POST','GET']):
     course_query_form = CourseQueryForm(request.args, csrf_enabled=False)
-    res = session.query(CourseDB)
+    res = dbsession.query(CourseDB)
     gen_eds_list = request.args.getlist("gen_eds")
     search_string = "search("
     for i in request.args:
@@ -58,7 +58,7 @@ def results_page():
     
     #lst = eval(search_string)
     #print(lst)
-    return render_template("results.html", lst = result)
+    return render_template("results.html", lst = sorted(list(result)))
 
 @app.route('/coursefinder')
 def main_page( methods=['POST','GET']):
@@ -79,7 +79,7 @@ def catalog():
 def course_page(dept,number):
     try:
         course_id = str(dept + ' ' + number)
-        res = session.query(CourseDB)
+        res = dbsession.query(CourseDB)
         result = search(id = course_id, ses = res)[0]
         print(result)
         return render_template("course.html",result = result)
