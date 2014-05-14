@@ -4,5 +4,25 @@
 
 {% block content %}
 {{ super() }}  
-<h1>Hello, Bootstrap</h1>
+
+<div>
+
+  {% for course in lst %}
+  
+  {% with link = "/coursefinder/"+course.dept+"/"+course.number %}
+    
+  <div> 
+    {{course.id}}:
+    <a href={{link}}>{{course.title}}</a>  
+    
+  </div> <br />
+  {% endwith %}
+  {% endfor %}
+  
+</div>
+
+
+
+
+
 {% endblock %}

@@ -67,7 +67,7 @@ if __name__ == "__main__":
     res = session.query(CourseDB.title) #Note: In the end, we'll want the query so simply return the class.
     print("")
     print("")
-    print(search(title = "Introduction", dept = "Rel", gen_eds = "BL", ses = res))
+    print(search(title = "", dept = "", gen_eds = "", prereqs = "",  ses = res))
     print("")
     print("")
     print(search(dept = "CS", ses = res))
