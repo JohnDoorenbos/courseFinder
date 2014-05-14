@@ -1,7 +1,7 @@
 from config import *
 from dbSearch import *
 
-session = loadSession()
+#session = loadSession()
 
 class CourseQueryForm(Form):
     dept = TextField('Department')
@@ -21,6 +21,11 @@ class CourseQueryForm(Form):
                                            ('rel','Rel'),
                                            ('skl','Skl'),
                                            ('wel','Wel')])
+
+class ReviewForm(Form):
+    stars = IntegerField('Stars (1-5)', [validators.DataRequired(),
+                                         validators.NumberRange(1,5)])
+    content = TextAreaField('Content')
 
 @app.route('/coursefinder', methods=['POST','GET'])
 def main_page():
@@ -42,13 +47,17 @@ def catalog():
 @app.route('/coursefinder/catalog/<dept>/<number>')
 def course_page(dept,number):
     try:
-        course_id = str(dept + ' ' + number)
+        course_id = str(dept + ' ' + number).toupper()
         res = session.query(CourseDB)
         result = search(id = course_id, ses = res)[0]
         print(result)
-        return render_template("course.html",result = result)
+        form = ReviewForm(csrf_enabled=False)
+        return render_template("course.html", result=result, form=form)
     except:
-        return 'Course does not exist'
+        form = ReviewForm(csrf_enabled=False)
+        result = {}
+        return render_template("course.html", result=result, form=form)
+
 
 @app.route('/coursefinder/api')
 def api(methods=['POST','GET']):

@@ -16,4 +16,11 @@
   <p>Same as: {{result.same_as}}</p>
 {% endif %}
 
+<form method="GET", action="/submit">
+{% for field in form %}
+  {{ render_field(field) }}
+{% endfor %}
+<input type="submit" value="Submit!"/>
+</form>
+
 {% endblock %}
