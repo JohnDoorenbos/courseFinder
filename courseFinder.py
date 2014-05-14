@@ -4,6 +4,7 @@ from dbSearch import *
 session = loadSession()
 
 
+
 class CourseQueryForm(Form):
     dept = TextField('Department',[validators.Length(min=2, max=5)], id="dept")
     #number = TextField('Course Number',[validators.Length(min=3, max=4)], id="number")
@@ -24,37 +25,12 @@ class CourseQueryForm(Form):
                                            ('skl','Skl'),
                                            ('wel','Wel')], id="gen_eds")
 
-@app.route('/coursefinder', methods=['POST', 'GET'])
-def forms_page():
-    if request.method == 'GET':
-        print 'Request == \'GET\''
-        print 'request.args:', str([key+': '+request.args[key]
-                                    for key in request.args.keys()])
-        form = CourseQueryForm(request.args)
-    else:
-        print 'not Request == \'GET\''
-        form = CourseQueryForm()
-
-    #if form.validate_on_submit():
-    #    print("HOLY COW IT VALIDATED ON SUBMIT")
-        
-    if form.validate(): #javascript evaluator
-        print 'form validated'
-        return 'Hello, validated form!'
-    
-    
-    else:
-        print 'form not validated'
-        if form.errors:
-            for error in form.errors: 
-                print str(error) + ': ' + str(form.errors[error])
-        return render_template('form.html',form = form)
 
 
 
-
-@app.route("/coursefinder/results")
+@app.route("/coursefinder/results",methods=['POST','GET'])
 def results_page():
+    course_query_form = CourseQueryForm(request.args, csrf_enabled=False)
     res = session.query(CourseDB)
     gen_eds_list = request.args.getlist("gen_eds")
     search_string = "search("
@@ -84,19 +60,37 @@ def results_page():
     #print(lst)
     return render_template("results.html", lst = result)
 
+@app.route('/coursefinder')
+def main_page( methods=['POST','GET']):
+    print request.method
+    course_query_form = CourseQueryForm(csrf_enabled=False)
+    print course_query_form.validate()
+    return render_template('form.html', form=course_query_form)
+
+
 @app.route('/coursefinder/catalog')
 def catalog():
     #This should have a template that will go through all of the courses and list them (much like the search)
     return "Contains all courses in the database"
 
-@app.route('/coursefinder/<dept>/<number>')
+
+@app.route('/coursefinder/catalog/<dept>/<number>')
+
 def course_page(dept,number):
-    course_id = str(dept + ' ' + number)
-    res = session.query(CourseDB)
-    result = search(id = course_id, ses = res)[0]
-    print(result)
-    return render_template("course.html",result = result)
-    
+    try:
+        course_id = str(dept + ' ' + number)
+        res = session.query(CourseDB)
+        result = search(id = course_id, ses = res)[0]
+        print(result)
+        return render_template("course.html",result = result)
+    except:
+        return 'Course does not exist'
+
+@app.route('/coursefinder/api')
+def api(methods=['POST','GET']):
+    data = {'hello':'world'}
+    #api will go here
+    return jsonify(**data)
 
 if __name__ == "__main__":
     app.run(debug=True)
