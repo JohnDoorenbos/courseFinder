@@ -17,7 +17,9 @@
   <p>Same as: {{result.same_as}}</p>
 {% endif %}
 
-<form method="GET", action="/submit">
+
+<form method="GET", action="/coursefinder/catalog/{{course_id}}/submit">
+
 {% for field in form %}
   {{ render_field(field) }}
 {% endfor %}

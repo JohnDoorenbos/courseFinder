@@ -27,25 +27,6 @@ Make links out of the different gen_eds and what not.
 
 Also use flask plugins for boot strap and stuff. Might have to putter around with that a bit. 
 
-Databases:
-
-Professor:
- Name
- Bio
- Department
- 
- One to many relationship with Ratings
- Many to Many with courses
-
-Course:
- Name
- Department
- Number
- Description 
- Gen Ed Requirements
- Pre -Reqs
- Times offered?
- Many to many relationship with professors
  
  
 Ratings:

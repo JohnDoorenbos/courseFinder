@@ -1,5 +1,6 @@
 from config import *
 from dbSearch import *
+import re, random
 
 dbsession = loadSession()
 
@@ -68,6 +69,7 @@ def results_page(methods=['POST','GET']):
     print("")
     print(result)
     
+
     return render_template("results.html", lst = sorted(list(result)), history = history)
 
 @app.route('/coursefinder/catalog')
@@ -76,22 +78,47 @@ def catalog():
     return "Contains all courses in the database"
 
 
-@app.route('/coursefinder/catalog/<dept>/<number>')
-def course_page(dept,number):
-    try: 
-        course_id = str(dept + ' ' + number)
+
+@app.route('/coursefinder/catalog/<course_id>')
+def course_page(course_id):
+    try:
+        formatted_id = course_id.upper()
+        match = re.match('^([A-Z]+)(\d{3}.?)$',formatted_id)
+        if match:
+            formatted_id = str(match.group(1) + ' ' + match.group(2))
+        else:
+            return '\'' + course_id + '\' is not a valid course id.'
         res = dbsession.query(CourseDB)
-        result = search(id = course_id, ses = res)[0]
-        print(result)
+        result = search(id = formatted_id, ses = res)[0]
         form = ReviewForm().remove_csrf()
         
         #Appends course title to history
         history.add(result)
-        print(history)
-        
-        return render_template("course.html", result=result, form=form, history = history)
+
+        return render_template("course.html", result=result, form=form, course_id=course_id, history = history)
     except IndexError:
         return 'Course does not exist.'
+
+def next_review_id():
+    return random.randrange(10000)
+
+@app.route('/coursefinder/catalog/<course_id>/submit')
+def submit_review(course_id, methods=['POST','GET']):
+    formatted_id = course_id.upper()
+    match = re.match('^([A-Z]+)(\d{3}.?)$',formatted_id)
+    if match:
+        formatted_id = str(match.group(1) + ' ' +
+                                  match.group(2))
+    form = ReviewForm(request.args).remove_csrf()
+    if form.validate():
+        print 'form validated'
+        review = Review(next_review_id(),form.stars.data,form.content.data,str(formatted_id))
+        db.session.add(review)
+        db.session.commit()
+        flash('Thanks for submitting a review')
+    return redirect('/coursefinder/catalog/'+course_id)
+    
+
 
 @app.route('/coursefinder/api')
 def api(methods=['POST','GET']):
