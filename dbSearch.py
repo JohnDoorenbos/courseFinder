@@ -1,8 +1,5 @@
 from config import *
 
-#I first, I need to be able to access my database
-
-
 from sqlalchemy import create_engine, MetaData, Table
 from sqlalchemy.orm import mapper, sessionmaker
  
@@ -54,8 +51,6 @@ def search( title = None, dept = None, gen_eds = None, prereqs = None, professor
     return eval(result) #Evaluates that query.
 
 #----------------------------------------------------------------------
-
-
 
 
  

@@ -3,10 +3,14 @@ from dbSearch import *
 
 dbsession = loadSession()
 
+class CustomForm(Form):
+    def remove_csrf(self):
+        self.__delitem__('csrf_token')
+        self.csrf_enabled = False
+        return self
 
-
-class CourseQueryForm(Form):
-    dept = TextField('Department',[validators.Length(min=2, max=5)], id="dept")
+class CourseQueryForm(CustomForm):
+    dept = TextField('Department', id="dept")
     #number = TextField('Course Number',[validators.Length(min=3, max=4)], id="number")
     title = TextField('Course Title', id="title")
     gen_eds = SelectMultipleField('Gen Ed Fulfillments',
@@ -25,12 +29,22 @@ class CourseQueryForm(Form):
                                            ('skl','Skl'),
                                            ('wel','Wel')], id="gen_eds")
 
+class ReviewForm(CustomForm):
+    stars = IntegerField('Stars (1-5)', [validators.DataRequired(),
+                                         validators.NumberRange(1,5)])
+    content = TextAreaField('Content')
 
+@app.route('/coursefinder')
+def main_page():
+    print request.method
+    form = CourseQueryForm().remove_csrf()
+    return render_template('form.html', form=form, history=history)
 
 
 @app.route("/coursefinder/results")
 def results_page(methods=['POST','GET']):
-    course_query_form = CourseQueryForm(request.args, csrf_enabled=False)
+    course_query_form = CourseQueryForm().remove_csrf()
+    #Maybe insert a function to encapsulate all this stuff
     res = dbsession.query(CourseDB)
     gen_eds_list = request.args.getlist("gen_eds")
     search_string = "search("
@@ -54,19 +68,7 @@ def results_page(methods=['POST','GET']):
     print("")
     print(result)
     
-    
-    
-    #lst = eval(search_string)
-    #print(lst)
-    return render_template("results.html", lst = sorted(list(result)))
-
-@app.route('/coursefinder')
-def main_page( methods=['POST','GET']):
-    print request.method
-    course_query_form = CourseQueryForm(csrf_enabled=False)
-    print course_query_form.validate()
-    return render_template('form.html', form=course_query_form)
-
+    return render_template("results.html", lst = sorted(list(result)), history = history)
 
 @app.route('/coursefinder/catalog')
 def catalog():
@@ -75,16 +77,21 @@ def catalog():
 
 
 @app.route('/coursefinder/catalog/<dept>/<number>')
-
 def course_page(dept,number):
-    try:
+    try: 
         course_id = str(dept + ' ' + number)
         res = dbsession.query(CourseDB)
         result = search(id = course_id, ses = res)[0]
         print(result)
-        return render_template("course.html",result = result)
-    except:
-        return 'Course does not exist'
+        form = ReviewForm().remove_csrf()
+        
+        #Appends course title to history
+        history.add(result)
+        print(history)
+        
+        return render_template("course.html", result=result, form=form, history = history)
+    except IndexError:
+        return 'Course does not exist.'
 
 @app.route('/coursefinder/api')
 def api(methods=['POST','GET']):

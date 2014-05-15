@@ -1,34 +1,31 @@
-Maybe have a recently visited tab? 
 
 
+<------------------Things for John to look at:------------------->
+
+Searching through the sql alchemy tables for reviews, in particular for creating a unique identifier for new reviews being added (think integers)
+
+Create a basic catalog. eventually make it more navigatable. 
+
+continue developing the results page display.
+
+Make a display for History (something to be inherited from base.html. i.e Needs to be on every page)
+
+Get this deployed as a heroku app!
 
 
+<---------------------------------------------------------------->   
 
-USE WTForms
+#########Thoughts for new development:##########
+
+
+Make links out of the different gen_eds and what not.
+
+
+################################################
+
+
 
 Also use flask plugins for boot strap and stuff. Might have to putter around with that a bit. 
-
-
-
-
-
-What are questions we have about the project?
-
-Too big?
-
-Where can we get our information from? 
-Professors - Is there a database of professors (maybe with bios)that we can grab?
-Classes - Every Semester, this changes, so we can't hardcode a class schedule in.
-   What would be great is if there is something that has all of next semesters classes, times and professors that we could get access to. 
-
-Getting information:
-  writte pyhton scrtip using URLLIB  (beautiful soup [grab from registrars web page] some guy Doug)
-
-Python module getting text out of PDF.
-
-
-
-
 
 Databases:
 

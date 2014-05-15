@@ -1,7 +1,7 @@
 from flask import Flask, render_template, session, request, redirect, jsonify
 from flask_bootstrap import Bootstrap
 from flask_wtf import Form
-from wtforms import TextField, BooleanField, SubmitField, SelectMultipleField, validators 
+from wtforms import IntegerField, TextAreaField, TextField, BooleanField, SubmitField, SelectMultipleField, validators 
 from flask.ext.sqlalchemy import SQLAlchemy
 
 
@@ -14,6 +14,7 @@ app.secret_key = "luther"
 db = SQLAlchemy(app)
 dbPath = 'sqlite:////tmp/CF1.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = dbPath
+
 #------------------Defining our Models for the database----------------------------------------------
 
 course_offerings = db.Table('course_offerings',
@@ -45,7 +46,20 @@ class Course(db.Model):
         self.id = id
         self.professors = professors
         self.same_as = same_as
-    
+
+class Review(db.Model):
+    __tablename__ = "reviews"
+    review_id = db.Column(db.Integer, primary_key = True)
+    stars = db.Column(db.Integer)
+    content = db.Column(db.Text)
+    course_id = db.Column(db.Text, db.ForeignKey('courses.id'))
+
+    def __init__(self, review_id, stars, content, course_id):
+        self.review_id = review_id
+        self.stars = stars
+        self.content = content
+        self.course_id
+
 class Professor(db.Model):
     __tablename__ = "professors"
     name =  db.Column(db.Text, primary_key = True)
@@ -58,7 +72,25 @@ class Professor(db.Model):
         self.bio = bio
         self.department = department
         self.courses = courses
+#----------------------------------------------------------------------------
 
+class History(): #good for now, maybe get it so that it takes cites in the list to the top in they are visited.
+    '''This Class stores the ten last course pages visited by the user. Note: it stores the database course entry. It has an add function that takes a course, and enters it into the course list so long as the course isn't already in the list. The history class has a maxLength of 10 (currently)'''
+ 
+    def __init__(self):
+        self.courses = []
+        self.maxLength = 10
+    def add(self, course):
+        if course not in self.courses:
+            self.courses.insert(0,course)
+        if len(self.courses) > self.maxLength:
+            self.courses.pop() 
+    def __str__(self):
+        result = ''
+        for course in self.courses:
+            result += course.title + ", "
+            
+        return(result)
 
-
-
+history = History()            
+            

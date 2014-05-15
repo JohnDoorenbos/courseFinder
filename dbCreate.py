@@ -3,9 +3,6 @@ from coursedata import get_course_data
 
 course_data = get_course_data()
 
-
-#eventually we may want to make this it's own class
-
 db.drop_all()
 db.create_all()
 

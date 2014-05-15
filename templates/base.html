@@ -55,7 +55,23 @@
   
 <div class="container">
   <div class="starter-template">
+    
     {% block content %}
+    <div class="history">
+      <p>Recently Visited:</p>
+      {% for course in history.courses %}
+        
+
+      {% with link = "/coursefinder/catalog/"+course.dept+"/"+course.number %}
+      
+      {{course.id}}: <a href={{link}}>{{course.title}}</a>  <br />
+
+
+      {% endwith %}
+      {% endfor%}
+      
+    </div>
+
     
     <h1>Course Finder</h1>
     <p class="lead">Use this course finder to help you find classes for next semester! Look for classes by department, professor, general education requirement, and more!</p>

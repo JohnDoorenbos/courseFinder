@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+
 {% block title %}{{result.id}} {{result.title}}{% endblock %}
 
 
 {% block content %}
-  
+{{ super() }}  
 <h1>{{result.title}}</h1>
 <p>Course: {{result.id}}     Credits: {{result.hours}}</p>
 <p> Description: {{result.desc}}</p>
@@ -15,5 +16,12 @@
 {% if result.same_as != '[]' %}
   <p>Same as: {{result.same_as}}</p>
 {% endif %}
+
+<form method="GET", action="/submit">
+{% for field in form %}
+  {{ render_field(field) }}
+{% endfor %}
+<input type="submit" value="Submit!"/>
+</form>
 
 {% endblock %}
