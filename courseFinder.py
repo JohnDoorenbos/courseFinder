@@ -1,5 +1,6 @@
 from config import *
 from dbSearch import *
+import re, random
 
 dbsession = loadSession()
 
@@ -78,17 +79,41 @@ def catalog():
     return "Contains all courses in the database"
 
 
-@app.route('/coursefinder/catalog/<dept>/<number>')
-def course_page(dept,number):
+@app.route('/coursefinder/catalog/<course_id>')
+def course_page(course_id):
     try:
-        course_id = str(dept + ' ' + number)
+        formatted_id = course_id.upper()
+        match = re.match('^([A-Z]+)(\d{3}.?)$',formatted_id)
+        if match:
+            formatted_id = str(match.group(1) + ' ' + match.group(2))
+        else:
+            return '\'' + course_id + '\' is not a valid course id.'
         res = dbsession.query(CourseDB)
-        result = search(id = course_id, ses = res)[0]
-        print(result)
+        result = search(id = formatted_id, ses = res)[0]
         form = ReviewForm().remove_csrf()
-        return render_template("course.html", result=result, form=form)
+        return render_template("course.html", result=result, form=form, course_id=course_id)
     except IndexError:
         return 'Course does not exist.'
+
+def next_review_id():
+    return random.randrange(10000)
+
+@app.route('/coursefinder/catalog/<course_id>/submit')
+def submit_review(course_id, methods=['POST','GET']):
+    formatted_id = course_id.upper()
+    match = re.match('^([A-Z]+)(\d{3}.?)$',formatted_id)
+    if match:
+        formatted_id = str(match.group(1) + ' ' +
+                                  match.group(2))
+    form = ReviewForm(request.args).remove_csrf()
+    if form.validate():
+        print 'form validated'
+        review = Review(next_review_id(),form.stars.data,form.content.data,str(formatted_id))
+        db.session.add(review)
+        db.session.commit()
+        flash('Thanks for submitting a review')
+    return redirect('/coursefinder/catalog/'+course_id)
+    return 'Hello, '+course_id+'!'
 
 @app.route('/coursefinder/api')
 def api(methods=['POST','GET']):

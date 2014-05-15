@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request, redirect, jsonify
+from flask import Flask, render_template, session, request, redirect, jsonify, flash
 from flask_bootstrap import Bootstrap
 from flask_wtf import Form
 from wtforms import IntegerField, TextAreaField, TextField, BooleanField, SubmitField, SelectMultipleField, validators 
@@ -35,6 +35,7 @@ class Course(db.Model):
     id = db.Column(db.Text, primary_key = True)
     professors = db.relationship("Professor",secondary = course_offerings)
     same_as = db.Column(db.Text)
+    reviews = db.relationship("Review")
     def __init__(self, title, dept, number, desc, gen_eds, prereqs, id, professors, hours, same_as):
         self.title = title
         self.dept = dept
