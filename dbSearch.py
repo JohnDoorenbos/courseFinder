@@ -5,7 +5,8 @@ from sqlalchemy.orm import mapper, sessionmaker
  
 class CourseDB(object):
     pass
- 
+class ReviewDB(object):
+    pass
 #----------------------------------------------------------------------
 def loadSession():
     """This function generates a session, with which you can make queries to the database."""    
@@ -17,6 +18,9 @@ def loadSession():
     courses = Table('courses', metadata, autoload=True)
     mapper(CourseDB, courses)
  
+    reviews = Table('reviews',metadata, autoload=True)
+    mapper(ReviewDB, reviews)
+    
     Session = sessionmaker(bind=engine)
     session = Session()
     return session
@@ -49,6 +53,32 @@ def search( title = None, dept = None, gen_eds = None, prereqs = None, professor
     print("")
     
     return eval(result) #Evaluates that query.
+
+
+def results_page_search(dbsession,request):
+    res = dbsession.query(CourseDB)
+    gen_eds_list = request.args.getlist("gen_eds")
+    search_string = "search("
+    for i in request.args:
+        if i != "gen_eds":
+            search_string += i+"="+"'"+request.args[i]+"'"+", "
+
+    new_search_string = ""
+    to_become_set = []
+    if len(gen_eds_list) == 0:
+        search_string += "ses = res)"
+        to_become_set = eval(search_string)
+    for gen_ed in gen_eds_list:
+        new_search_string = search_string+"gen_eds = "+"'"+gen_ed+"'" + ", ses = res)"
+        temp = eval(new_search_string)
+        print(new_search_string)
+        print(temp)
+        to_become_set += temp
+    
+    result = set(to_become_set)
+    print("")
+#    print(result)
+    return result
 
 #----------------------------------------------------------------------
 

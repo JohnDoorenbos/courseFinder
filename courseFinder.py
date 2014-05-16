@@ -45,35 +45,18 @@ def main_page():
 @app.route("/coursefinder/results")
 def results_page(methods=['POST','GET']):
     course_query_form = CourseQueryForm().remove_csrf()
-    #Maybe insert a function to encapsulate all this stuff
-    res = dbsession.query(CourseDB)
-    gen_eds_list = request.args.getlist("gen_eds")
-    search_string = "search("
-    for i in request.args:
-        if i != "gen_eds":
-            search_string += i+"="+"'"+request.args[i]+"'"+", "
-
-    new_search_string = ""
-    to_become_set = []
-    if len(gen_eds_list) == 0:
-        search_string += "ses = res)"
-        to_become_set = eval(search_string)
-    for gen_ed in gen_eds_list:
-        new_search_string = search_string+"gen_eds = "+"'"+gen_ed+"'" + ", ses = res)"
-        temp = eval(new_search_string)
-        print(new_search_string)
-        print(temp)
-        to_become_set += temp
+    result = results_page_search(dbsession,request)
     
-    result = set(to_become_set)
-    print("")
-    print(result)
-    
-
+    #appears to be a bug with the sorted(list(result) clause. 
+    #When searching for the hist gen_ed, one often gets the courses in different orders.
     return render_template("results.html", lst = sorted(list(result)), history = history)
 
 @app.route('/coursefinder/catalog')
 def catalog():
+    #One way to do this is to simply have a search for all courses in the database and return them.
+
+    #Could run through a list of depts and sort the catalog that way.
+    
     #This should have a template that will go through all of the courses and list them (much like the search)
     return "Contains all courses in the database"
 
@@ -100,6 +83,10 @@ def course_page(course_id):
         return 'Course does not exist.'
 
 def next_review_id():
+    res = dbsession.query(ReviewDB)
+    review_id_list = res.filter(ReviewDB.review_id).all()
+    #print(review_id_list)
+    #print(res)
     return random.randrange(10000)
 
 @app.route('/coursefinder/catalog/<course_id>/submit')
@@ -127,5 +114,5 @@ def api(methods=['POST','GET']):
     return jsonify(**data)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True) #, use_reloader = False)
 

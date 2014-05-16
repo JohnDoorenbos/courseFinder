@@ -59,7 +59,7 @@ class Review(db.Model):
         self.review_id = review_id
         self.stars = stars
         self.content = content
-        self.course_id
+        self.course_id = course_id
 
 class Professor(db.Model):
     __tablename__ = "professors"
@@ -76,7 +76,7 @@ class Professor(db.Model):
 
 #----------------------------------------------------------------------------
 
-class History(): #good for now, maybe get it so that it takes cites in the list to the top in they are visited.
+class History(): #Doesn't update when back button is used. 
     '''This Class stores the ten last course pages visited by the user. Note: it stores the database course entry. It has an add function that takes a course, and enters it into the course list so long as the course isn't already in the list. The history class has a maxLength of 10 (currently)'''
  
     def __init__(self):
@@ -84,6 +84,9 @@ class History(): #good for now, maybe get it so that it takes cites in the list 
         self.maxLength = 10
     def add(self, course):
         if course not in self.courses:
+            self.courses.insert(0,course)
+        else:
+            self.courses.remove(course)
             self.courses.insert(0,course)
         if len(self.courses) > self.maxLength:
             self.courses.pop() 
