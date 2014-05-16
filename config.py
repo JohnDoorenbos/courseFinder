@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, session, request, redirect, jsonify, flash
 from flask_bootstrap import Bootstrap
 from flask_wtf import Form
@@ -12,7 +13,7 @@ Bootstrap(app)
 app.secret_key = "luther"
 
 db = SQLAlchemy(app)
-dbPath = 'sqlite:////tmp/CF1.db'
+dbPath = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_DATABASE_URI'] = dbPath
 
 #------------------Defining our Models for the database----------------------------------------------
