@@ -13,8 +13,8 @@ Bootstrap(app)
 app.secret_key = "luther"
 
 db = SQLAlchemy(app)
-dbPath = os.environ['DATABASE_URL']
-app.config['SQLALCHEMY_DATABASE_URI'] = dbPath
+dbPath =  'pg8000+postgres://flnqsqilzhheoo:mkz5h36UA7R63Om9dPPQ1X4M5i@ec2-54-83-196-217.compute-1.amazonaws.com:5432/dcagbs1vl8cb22'#os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] =  dbPath
 
 #------------------Defining our Models for the database----------------------------------------------
 
