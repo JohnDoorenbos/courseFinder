@@ -197,11 +197,10 @@ def get_course_data():
 def main():
     #test function, gets course data and prints it
     course_data = get_course_data()
-    gen_ed_list = []
+    dept_list = []
     for course in course_data:
-        for gen_ed in eval(course['gen_eds']):
-            if gen_ed not in gen_ed_list:
-                gen_ed_list.append(gen_ed)
+        if course['dept'] not in dept_list:
+            dept_list.append(course['dept'])
         #print 'id:', course['id']
         #print 'dept:', course['dept']
         #print 'number:', course['number']
@@ -213,7 +212,7 @@ def main():
         #print 'gen_eds:', course['gen_eds']
         #print ''
         pass
-    print sorted(gen_ed_list)
+    print sorted(dept_list)
 
                         
 

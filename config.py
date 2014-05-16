@@ -59,7 +59,7 @@ class Review(db.Model):
         self.review_id = review_id
         self.stars = stars
         self.content = content
-        self.course_id
+        self.course_id = course_id
 
 class Professor(db.Model):
     __tablename__ = "professors"
