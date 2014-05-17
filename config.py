@@ -100,7 +100,7 @@ class History(): #Doesn't update when back button is used.
         return(result)
 
 history = History()            
- '''           
+'''           
 urlparse.uses_netloc.append("postgres")
 url = urlparse.urlparse(os.environ['DATABASE_URL'])
 

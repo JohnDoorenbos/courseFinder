@@ -112,7 +112,7 @@ def api(methods=['POST','GET']):
     #api will go here
     return jsonify(**data)
 
-@app.route('/create_data_base')
+@app.route('/')
 def create_data_base():
     return dbCreate.main()
     
