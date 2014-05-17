@@ -1,11 +1,12 @@
-import os
 from flask import Flask, render_template, session, request, redirect, jsonify, flash
 from flask_bootstrap import Bootstrap
 from flask_wtf import Form
 from wtforms import IntegerField, TextAreaField, TextField, BooleanField, SubmitField, SelectMultipleField, validators 
 from flask.ext.sqlalchemy import SQLAlchemy
 
-
+import os
+import psycopg2
+import urlparse
 
     
 app = Flask(__name__)
@@ -100,4 +101,14 @@ class History(): #Doesn't update when back button is used.
 
 history = History()            
             
+urlparse.uses_netloc.append("postgres")
+url = urlparse.urlparse(os.environ['DATABASE_URL'])
 
+conn = psycopg2.connect(
+    database = url.path[1:],
+    user = url.username,
+    password=url.password,
+    host=url.hostname,
+    port=url.port
+)
+    
