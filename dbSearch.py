@@ -58,6 +58,7 @@ def search( title = None, dept = None, gen_eds = None, prereqs = None, professor
 def results_page_search(dbsession,request):
     res = dbsession.query(CourseDB)
     gen_eds_list = request.args.getlist("gen_eds")
+    print(gen_eds_list)
     search_string = "search("
     for i in request.args:
         if i != "gen_eds":
@@ -78,7 +79,7 @@ def results_page_search(dbsession,request):
     result = set(to_become_set)
     print("")
 #    print(result)
-    return result
+    return sorted(list(result))
 
 #----------------------------------------------------------------------
 

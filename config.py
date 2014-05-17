@@ -50,7 +50,7 @@ class Course(db.Model):
         self.professors = professors
         self.same_as = same_as
     def __str__(self):
-        return(self.title +" " + self.id)
+        return(self.title +" " + self.id + " " + self.gen_eds)
 class Review(db.Model):
     __tablename__ = "reviews"
     review_id = db.Column(db.Integer, primary_key = True)
