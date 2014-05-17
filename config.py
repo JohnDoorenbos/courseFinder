@@ -1,4 +1,4 @@
-\from flask import Flask, render_template, session, request, redirect, jsonify, flash
+from flask import Flask, render_template, session, request, redirect, jsonify, flash
 from flask_bootstrap import Bootstrap
 from flask_wtf import Form
 from wtforms import IntegerField, TextAreaField, TextField, BooleanField, SubmitField, SelectMultipleField, validators 
