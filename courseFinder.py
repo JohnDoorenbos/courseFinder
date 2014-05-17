@@ -71,7 +71,8 @@ def course_page(course_id):
 
     try: #get course from db, else tell user course does not exist
         res = dbsession.query(CourseDB)
-        result = search(id = formatted_id, ses = res)[0]
+        result = res.filter(CourseDB.id == formatted_id).one()
+        #result = search(id = formatted_id, ses = res)[0]
     except IndexError:
         return 'Course \'' + course_id + '\' does not exist.'
 
