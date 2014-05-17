@@ -9,7 +9,7 @@
 
   {% for course in lst %}
   
-  {% with link = "/coursefinder/catalog/"+course.dept+"/"+course.number %}
+  {% with link = "/coursefinder/catalog/"+course.dept+course.number %}
     
   <div class="result"> 
     {{course.id}}: <a href={{link}}>{{course.title}}</a>  

@@ -1,5 +1,15 @@
+****PRIORITIES****
+
+Displaying Reviews
+
+Deploying on Heroku (I'll ask today)
+
+What's it look like on a phone? (And Styling)
+
+Catalog
 
 
+Sorting results consistently
 <------------------Things for John to look at:------------------->
 
 Searching through the sql alchemy tables for reviews, in particular for creating a unique identifier for new reviews being added (think integers)
@@ -8,7 +18,6 @@ Create a basic catalog. eventually make it more navigatable.
 
 continue developing the results page display.
 
-Make a display for History (something to be inherited from base.html. i.e Needs to be on every page)
 
 Get this deployed as a heroku app!
 
