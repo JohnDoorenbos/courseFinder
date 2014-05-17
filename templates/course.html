@@ -25,6 +25,14 @@
 {% endif %}
 -->
 
+<h1>Reviews</h1>
+{% for review in reviews %}
+  <p>Rating: {{review.stars}}</p>
+  <p>{{review.content}}</p>
+  <br/>
+{% endfor %}
+
+<h1>Submit Review</h1>
 <form method="GET", action="/coursefinder/catalog/{{course_id}}/submit">
 
 {% for field in form %}
