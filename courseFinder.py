@@ -1,5 +1,6 @@
 from config import *
 from dbSearch import *
+import dbCreate
 import re, random
 
 dbsession = loadSession()
@@ -105,13 +106,16 @@ def submit_review(course_id, methods=['POST','GET']):
         flash('Thanks for submitting a review')
     return redirect('/coursefinder/catalog/'+course_id)
     
-
-
 @app.route('/coursefinder/api')
 def api(methods=['POST','GET']):
     data = {'hello':'world'}
     #api will go here
     return jsonify(**data)
+
+@app.route('create_data_base')
+def create_data_base():
+    dbCreate.main()
+    return 'Data base made?'
 
 if __name__ == "__main__":
     app.run(debug=True) #, use_reloader = False)
