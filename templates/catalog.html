@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ super() }}
+
+{% for dept in depts %}
+  <p><a href="/coursefinder/catalog/{{dept}}">
+    Catalog for {{dept}}
+  </p></a>
+{% endfor %}
+
+{% endblock content %}
