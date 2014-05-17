@@ -1,39 +1,9 @@
 from config import *
 from dbSearch import *
+from forms import CourseQueryForm, ReviewForm
 import re, random
 
 dbsession = loadSession()
-
-class CustomForm(Form):
-    def remove_csrf(self):
-        self.__delitem__('csrf_token')
-        self.csrf_enabled = False
-        return self
-
-class CourseQueryForm(CustomForm):
-    dept = TextField('Department', id="dept")
-    #number = TextField('Course Number',[validators.Length(min=3, max=4)], id="number")
-    title = TextField('Course Title', id="title")
-    gen_eds = SelectMultipleField('Gen Ed Fulfillments',
-                                  choices=[('',''),
-                                           ('bl','BL'),
-                                           ('hb','HB'),
-                                           ('hbssm','HBSSM'),
-                                           ('he','HE'),
-                                           ('hept','HEPT'),
-                                           ('hist','Hist'),
-                                           ('intcl','Intcl'),
-                                           ('nwl','NWL'),
-                                           ('nwnl','NWNL'),
-                                           ('quant','Quant'),
-                                           ('rel','Rel'),
-                                           ('skl','Skl'),
-                                           ('wel','Wel')], id="gen_eds")
-
-class ReviewForm(CustomForm):
-    stars = IntegerField('Stars (1-5)', [validators.DataRequired(),
-                                         validators.NumberRange(1,5)])
-    content = TextAreaField('Content')
 
 def format_id(course_id):
     #takes an id like 'cs200' and return 'CS 200'
@@ -46,12 +16,28 @@ def format_id(course_id):
     else:
         raise(ValueError,'\''+course_id+'\' is not a valid course id')
 
+def next_review_id():
+    res = dbsession.query(ReviewDB)
+    review_id_list = res.filter(ReviewDB.review_id).all()
+    #print(review_id_list)
+    #print(res)
+    return random.randrange(10000)
+
+def get_depts():
+    res = dbsession.query(CourseDB)
+
+    dept_list = []
+    for course in res:
+        if course.dept not in dept_list:
+            dept_list.append(course.dept)
+
+    return dept_list
+
 @app.route('/coursefinder')
 def main_page():
     print request.method
     form = CourseQueryForm().remove_csrf()
     return render_template('form.html', form=form, history=history)
-
 
 @app.route("/coursefinder/results")
 def results_page(methods=['POST','GET']):
@@ -64,12 +50,17 @@ def results_page(methods=['POST','GET']):
 
 @app.route('/coursefinder/catalog')
 def catalog():
-    #One way to do this is to simply have a search for all courses in the database and return them.
+    dept_list = sorted(get_depts())
+    return render_template('catalog.html',depts=dept_list, history=history)
 
-    #Could run through a list of depts and sort the catalog that way.
-    
-    #This should have a template that will go through all of the courses and list them (much like the search)
-    return "Contains all courses in the database"
+@app.route('/coursefinder/catalog/<dept>')
+def dept_page(dept):
+    dept = dept.upper()
+
+    res = dbsession.query(CourseDB)
+    course_list = res.filter(CourseDB.dept == dept)
+
+    return render_template('dept.html',dept=dept,courses=course_list,history=history)
 
 @app.route('/coursefinder/catalog/<course_id>')
 def course_page(course_id):
@@ -102,13 +93,6 @@ def course_page(course_id):
     history.add(result)
 
     return render_template("course.html", result=result, form=form, course_id=course_id, history = history, reviews=review_list)
-
-def next_review_id():
-    res = dbsession.query(ReviewDB)
-    review_id_list = res.filter(ReviewDB.review_id).all()
-    #print(review_id_list)
-    #print(res)
-    return random.randrange(10000)
 
 @app.route('/coursefinder/catalog/<course_id>/submit')
 def submit_review(course_id, methods=['POST','GET']):
