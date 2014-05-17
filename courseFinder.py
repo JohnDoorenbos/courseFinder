@@ -114,8 +114,8 @@ def api(methods=['POST','GET']):
 
 @app.route('/create_data_base')
 def create_data_base():
-    dbCreate.main()
-    return 'Data base made?'
+    return dbCreate.main()
+    
 
 if __name__ == "__main__":
     app.run(debug=True) #, use_reloader = False)

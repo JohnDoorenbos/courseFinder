@@ -19,6 +19,6 @@ def main():
 #db.session.add(c1)
         
 #db.session.commit()
-
-if __name__ == "__main__":
+    return str(course_data)
+if __name__ ==x "__main__":
     main()
