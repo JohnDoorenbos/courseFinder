@@ -72,7 +72,7 @@ def results_page_search(dbsession,request):
     for gen_ed in gen_eds_list:
         new_search_string = search_string+"gen_eds = "+"'"+gen_ed+"'" + ", ses = res)"
         temp = eval(new_search_string)
-        print(new_search_string)
+        print(new_search_string, "WHAT IS GOING ON...?")
         print(temp)
         to_become_set += temp
     
