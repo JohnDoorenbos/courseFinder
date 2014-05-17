@@ -17,19 +17,19 @@ class CourseQueryForm(CustomForm):
     title = TextField('Course Title', id="title")
     gen_eds = SelectMultipleField('Gen Ed Fulfillments',
                                   choices=[('',''),
-                                           ('bl','BL'),
-                                           ('hb','HB'),
-                                           ('hbssm','HBSSM'),
-                                           ('he','HE'),
-                                           ('hept','HEPT'),
-                                           ('hist','Hist'),
-                                           ('intcl','Intcl'),
-                                           ('nwl','NWL'),
-                                           ('nwnl','NWNL'),
-                                           ('quant','Quant'),
-                                           ('rel','Rel'),
-                                           ('skl','Skl'),
-                                           ('wel','Wel')], id="gen_eds")
+                                           ('BL','BL'),
+                                           ('HB','HB'),
+                                           ('HBSSM','HBSSM'),
+                                           ('HE','HE'),
+                                           ('HEPT','HEPT'),
+                                           ('Hist','Hist'),
+                                           ('Intcl','Intcl'),
+                                           ('NWL','NWL'),
+                                           ('NWNL','NWNL'),
+                                           ('Quant','Quant'),
+                                           ('Rel','Rel'),
+                                           ('Skl','Skl'),
+                                           ('Wel','Wel')], id="gen_eds")
 
 class ReviewForm(CustomForm):
     stars = IntegerField('Stars (1-5)', [validators.DataRequired(),
