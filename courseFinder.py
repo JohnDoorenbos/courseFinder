@@ -130,8 +130,8 @@ def api(methods=['POST','GET']):
     return jsonify(**data)
 
 @app.route('/')
-def create_data_base():
-    return dbCreate.main()
+def go_to_main_page():
+    return redirect('/coursefinder')
     
 
 if __name__ == "__main__":

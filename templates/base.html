@@ -65,7 +65,7 @@
       {% for course in history.courses %}
         
 
-      {% with link = "/coursefinder/catalog/"+course.dept+"/"+course.number %}
+      {% with link = "/coursefinder/catalog/"+course.id %}
       
       {{course.id}}: <a href={{link}}>{{course.title}}</a>  <br />
 
