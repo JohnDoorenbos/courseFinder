@@ -5,6 +5,13 @@
 
 {% block content %}
 {{ super() }}  
+<p class="coursetitle">{{result.id}} {{result.title}}</p>
+<p class="credithours">{{result.hours}}</p>
+<p class="coursedescriptions">{{result.desc}}</p>
+<p class="coursedescriptions">Prerequisites: {{result.prereqs}}</p>
+<p class="coursedescriptions">Same as: {{result.same_as}}</p>
+<p class="coursedescriptions">General education fulfillments: {{result.gen_eds}}</p>
+<!--
 <h1>{{result.title}}</h1>
 <p>Course: {{result.id}}     Credits: {{result.hours}}</p>
 <p> Description: {{result.desc}}</p>
@@ -16,8 +23,16 @@
 {% if result.same_as != '[]' %}
   <p>Same as: {{result.same_as}}</p>
 {% endif %}
+-->
 
+<h1>Reviews</h1>
+{% for review in reviews %}
+  <p>Rating: {{review.stars}}</p>
+  <p>{{review.content}}</p>
+  <br/>
+{% endfor %}
 
+<h1>Submit Review</h1>
 <form method="GET", action="/coursefinder/catalog/{{course_id}}/submit">
 
 {% for field in form %}

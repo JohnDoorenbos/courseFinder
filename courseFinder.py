@@ -36,6 +36,17 @@ class ReviewForm(CustomForm):
                                          validators.NumberRange(1,5)])
     content = TextAreaField('Content')
 
+def format_id(course_id):
+    #takes an id like 'cs200' and return 'CS 200'
+    #mostly used for preparing ids from urls to be used in the database
+    formatted_id = course_id.upper()
+    match = re.match('^([A-Z]+)(\d{3}.?)$',formatted_id)
+    if match:
+        formatted_id = str(match.group(1) + ' ' + match.group(2))
+        return formatted_id
+    else:
+        raise(ValueError,'\''+course_id+'\' is not a valid course id')
+
 @app.route('/coursefinder')
 def main_page():
     print request.method
@@ -61,27 +72,37 @@ def catalog():
     #This should have a template that will go through all of the courses and list them (much like the search)
     return "Contains all courses in the database"
 
-
-
 @app.route('/coursefinder/catalog/<course_id>')
 def course_page(course_id):
-    try:
-        formatted_id = course_id.upper()
-        match = re.match('^([A-Z]+)(\d{3}.?)$',formatted_id)
-        if match:
-            formatted_id = str(match.group(1) + ' ' + match.group(2))
-        else:
-            return '\'' + course_id + '\' is not a valid course id.'
+    try: #format id, else tell user that id is invalid
+        formatted_id = format_id(course_id)
+    except ValueError:
+        return '\''+course_id+'\' is not a valid course id.'
+
+    try: #get course from db, else tell user course does not exist
         res = dbsession.query(CourseDB)
         result = search(id = formatted_id, ses = res)[0]
-        form = ReviewForm().remove_csrf()
-        
-        #Appends course title to history
-        history.add(result)
-
-        return render_template("course.html", result=result, form=form, course_id=course_id, history = history)
     except IndexError:
-        return 'Course does not exist.'
+        return 'Course \'' + course_id + '\' does not exist.'
+
+    #get reviews for course
+    res = dbsession.query(ReviewDB)
+    review_list = list(res.filter(ReviewDB.course_id == formatted_id))
+
+    #get reviews for courses that are the same (like CS220 and MATH220)
+    #and concatenates them together
+    res = dbsession.query(CourseDB)
+    course = res.filter(CourseDB.id == formatted_id).one()
+    for same_course in eval(course.same_as):
+        additional_reviews = dbsession.query(ReviewDB).filter(ReviewDB.course_id == same_course)
+        review_list += list(additional_reviews)
+
+    form = ReviewForm().remove_csrf()
+        
+    #Appends course title to history
+    history.add(result)
+
+    return render_template("course.html", result=result, form=form, course_id=course_id, history = history, reviews=review_list)
 
 def next_review_id():
     res = dbsession.query(ReviewDB)
@@ -92,11 +113,7 @@ def next_review_id():
 
 @app.route('/coursefinder/catalog/<course_id>/submit')
 def submit_review(course_id, methods=['POST','GET']):
-    formatted_id = course_id.upper()
-    match = re.match('^([A-Z]+)(\d{3}.?)$',formatted_id)
-    if match:
-        formatted_id = str(match.group(1) + ' ' +
-                                  match.group(2))
+    formatted_id = format_id(course_id)
     form = ReviewForm(request.args).remove_csrf()
     if form.validate():
         print 'form validated'
