@@ -3,13 +3,11 @@
 {% block content %}
 {{ super() }}
 
-<form class="form form-vertical" method="GET" action="/coursefinder/results">
-  
+<form class="form form-vertical" method="GET" action="/coursefinder/results">  
   {% for field in form %}
     {{render_field(field)}}
   {% endfor %}
-
-  <input type="submit" value="Go!"/>
-
+  <input type="submit" value="Search"/>
 </form>
+
 {% endblock %}

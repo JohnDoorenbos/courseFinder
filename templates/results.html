@@ -1,30 +1,20 @@
 {% extends "base.html" %}
-{% block title %}This is an example page{% endblock %}
-
 
 {% block content %}
 {{ super() }}  
 
-<div>
+<h1>Results</h1>
 
-  {% for course in lst %}
-  
-  {% with link = "/coursefinder/catalog/"+course.dept+course.number %}
-    
-  <div class="result"> 
-    {{course.id}}: <a href={{link}}>{{course.title}}</a>  
-    <div class="details">
-      <p>General Education Fulfillments:
-	
-	
-        {% for gen in course.gen_eds %}
-        {{gen}} 
-	{% endfor %} </p>
-	
-	
-      <p>Credit Hours: {{course.hours}}</p>
-    </div>
-  </div> <br />
+<div class="course_list">
+  {% for course in courses %}
+  {% with link = "/coursefinder/catalog/"+course.dept+"/"+course.dept+course.number %}
+
+  <div class="course">
+    <h2 class="course_title">{{course.id}}: <a href={{link}}>{{course.title}}</a></h2>
+    <p class="course_hours">{{course.hours}}</p>
+    <p class="course_details">General Education Fulfillments: {{course.gen_eds}}
+    <br>Prerequisites: {{course.prereqs}}</p>
+  </div>
   {% endwith %}
   {% endfor %}
   

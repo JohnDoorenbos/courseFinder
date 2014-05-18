@@ -3,10 +3,12 @@
 {% block content %}
 {{ super() }}
 
+<div class="dept_list"
 {% for dept in depts %}
-  <p><a href="/coursefinder/catalog/{{dept}}">
+  <p class="dept"><a href="/coursefinder/catalog/{{dept}}">
     Catalog for {{dept}}
   </p></a>
 {% endfor %}
+</div>
 
 {% endblock content %}

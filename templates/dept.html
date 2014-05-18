@@ -3,11 +3,13 @@
 {% block content %}
 {{ super() }}
 
-<h1>{{ dept }}</h1>
+<h1 class="dept_name">{{ dept }}</h1>
+<div class="course_list">
 {% for course in courses %}
-  <p><a href="/coursefinder/catalog/{{dept}}{{course.number}}">
-    {{ course.id }}, {{ course.title }}
+  <p class="course_title"><a href="/coursefinder/catalog/{{dept}}/{{course.dept}}{{course.number}}">
+    {{ course.id }} {{ course.title }}
   </p></a>
 {% endfor %}
+</div>
 
 {% endblock content %}

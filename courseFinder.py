@@ -16,13 +16,6 @@ def format_id(course_id):
     else:
         raise(ValueError,'\''+course_id+'\' is not a valid course id')
 
-def next_review_id():
-    res = dbsession.query(ReviewDB)
-    review_id_list = res.filter(ReviewDB.review_id).all()
-    #print(review_id_list)
-    #print(res)
-    return random.randrange(10000)
-
 def get_depts():
     res = dbsession.query(CourseDB)
 
@@ -32,6 +25,21 @@ def get_depts():
             dept_list.append(course.dept)
 
     return dept_list
+
+def get_review_ids():
+    res = dbsession.query(ReviewDB)
+    review_id_list = [review.review_id for review in res]
+    return review_id_list
+
+def next_review_id():
+    review_id_list = sorted(get_review_ids())
+    if 0 not in review_id_list:
+        return 0
+    else:
+        for review_id in review_id_list:
+            new_id = review_id + 1
+            if new_id not in review_id_list:
+                return new_id
 
 @app.route('/coursefinder')
 def main_page():
@@ -44,9 +52,7 @@ def results_page(methods=['POST','GET']):
     course_query_form = CourseQueryForm().remove_csrf()
     result = results_page_search(dbsession,request)
     
-    #appears to be a bug with the sorted(list(result) clause. 
-    #When searching for the hist gen_ed, one often gets the courses in different orders.
-    return render_template("results.html", lst = sorted(list(result)), history = history)
+    return render_template("results.html", courses = sorted(list(result), key = lambda c: c.id), history = history)
 
 @app.route('/coursefinder/catalog')
 def catalog():
@@ -62,18 +68,17 @@ def dept_page(dept):
 
     return render_template('dept.html',dept=dept,courses=course_list,history=history)
 
-@app.route('/coursefinder/catalog/<course_id>')
-def course_page(course_id):
+@app.route('/coursefinder/catalog/<dept>/<course_id>')
+def course_page(dept, course_id):
     try: #format id, else tell user that id is invalid
         formatted_id = format_id(course_id)
     except ValueError:
         return '\''+course_id+'\' is not a valid course id.'
 
-    try: #get course from db, else tell user course does not exist
+    try:
         res = dbsession.query(CourseDB)
         result = res.filter(CourseDB.id == formatted_id).one()
-        #result = search(id = formatted_id, ses = res)[0]
-    except IndexError:
+    except:
         return 'Course \'' + course_id + '\' does not exist.'
 
     #get reviews for course
@@ -81,7 +86,7 @@ def course_page(course_id):
     review_list = list(res.filter(ReviewDB.course_id == formatted_id))
 
     #get reviews for courses that are the same (like CS220 and MATH220)
-    #and concatenates them together
+    #and concatenate them together
     res = dbsession.query(CourseDB)
     course = res.filter(CourseDB.id == formatted_id).one()
     for same_course in eval(course.same_as):
@@ -93,10 +98,10 @@ def course_page(course_id):
     #Appends course title to history
     history.add(result)
 
-    return render_template("course.html", result=result, form=form, course_id=course_id, history = history, reviews=review_list)
+    return render_template("course.html", course=result, form=form, history = history, reviews=review_list)
 
-@app.route('/coursefinder/catalog/<course_id>/submit')
-def submit_review(course_id, methods=['POST','GET']):
+@app.route('/coursefinder/catalog/<dept>/<course_id>/submit')
+def submit_review(dept, course_id, methods=['POST','GET']):
     formatted_id = format_id(course_id)
     form = ReviewForm(request.args).remove_csrf()
     if form.validate():
@@ -105,7 +110,7 @@ def submit_review(course_id, methods=['POST','GET']):
         db.session.add(review)
         db.session.commit()
         flash('Thanks for submitting a review')
-    return redirect('/coursefinder/catalog/'+course_id)
+    return redirect('/coursefinder/catalog/'+dept+"/"+course_id)
     
 @app.route('/coursefinder/api')
 def api(methods=['POST','GET']):
@@ -116,8 +121,6 @@ def api(methods=['POST','GET']):
 @app.route('/')
 def go_to_main_page():
     return redirect('/coursefinder')
-    
 
 if __name__ == "__main__":
-    app.run(debug=True) #, use_reloader = False)
-
+    app.run(debug=True)

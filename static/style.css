@@ -1,15 +1,29 @@
-body
-{
+body {
     font-family: "Verdana", verdana, arial, helvetica, sans-serif;
     font-size: 11px;
     background: url(/static/katie.png);
 }
 
-h1
-{
+h1 {
     color: #777777;
     font-weight: bold;
     font-size: 30px;
     margin-top: 6pt;
     margin-bottom 6pt;
 }
+
+h2 {}
+p {}
+form {}
+
+.course_list {}
+.course {}
+.course_title {}
+.course_hours {}
+.course_details {}
+
+.dept_list {}
+.dept {}
+
+.review_list {}
+.review {}

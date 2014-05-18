@@ -1,44 +1,36 @@
 {% extends "base.html" %}
 
-{% block title %}{{result.id}} {{result.title}}{% endblock %}
-
+{% block title %}{{ course.id }} {{ course.title }}{% endblock %}
 
 {% block content %}
 {{ super() }}  
-<p class="coursetitle">{{result.id}} {{result.title}}</p>
-<p class="credithours">{{result.hours}}</p>
-<p class="coursedescriptions">{{result.desc}}</p>
-<p class="coursedescriptions">Prerequisites: {{result.prereqs}}</p>
-<p class="coursedescriptions">Same as: {{result.same_as}}</p>
-<p class="coursedescriptions">General education fulfillments: {{result.gen_eds}}</p>
-<!--
-<h1>{{result.title}}</h1>
-<p>Course: {{result.id}}     Credits: {{result.hours}}</p>
-<p> Description: {{result.desc}}</p>
-<p> General Education Fulfillments: {{result.gen_eds}}</p>
-{% if result.prereqs != '' %}
-  <p>Prerequisites: {{result.prereqs}}</p>
-{% endif %}
+<div class="course">
+  <h2 class="course_title">{{course.id}} {{course.title}}</h2>
+  <p class="course_hours">{{course.hours}}</p>
 
-{% if result.same_as != '[]' %}
-  <p>Same as: {{result.same_as}}</p>
-{% endif %}
--->
+  <p class="course_details">{{course.desc}}
+  <br/>Prerequisites: {{course.prereqs}}
+  <br/>Same as: {{course.same_as}}
+  <br/>General education fulfillments: {{course.gen_eds}}</p>
+</div>
 
-<h1>Reviews</h1>
-{% for review in reviews %}
-  <p>Rating: {{review.stars}}</p>
-  <p>{{review.content}}</p>
-  <br/>
-{% endfor %}
+<h2>Reviews</h1>
+<div class="review_list">
+  {% for review in reviews %}
+  <div class="review">
+    <p>Rating: {{review.stars}}</p>
+    <p>{{review.content}}</p>
+    <br/>
+  </div>
+  {% endfor %}
+</div>
 
-<h1>Submit Review</h1>
-<form method="GET", action="/coursefinder/catalog/{{course_id}}/submit">
-
-{% for field in form %}
+<h2>Submit Review</h1>
+<form method="GET", action="/coursefinder/catalog/{{course.dept}}/{{course.dept}}{{course.number}}/submit">
+  {% for field in form %}
   {{ render_field(field) }}
-{% endfor %}
-<input type="submit" value="Submit!"/>
+  {% endfor %}
+  <input type="submit" value="Submit!"/>
 </form>
 
 {% endblock %}
