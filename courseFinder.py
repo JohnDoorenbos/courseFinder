@@ -60,12 +60,12 @@ def results_page(methods=['POST','GET']):
     
     return render_template("results.html", courses = sorted(list(result), key = lambda c: c.id), history = history)
 
-@app.route('/coursefinder/catalog')
+@app.route('/catalog')
 def catalog():
     dept_list = sorted(get_depts())
     return render_template('catalog.html',depts=dept_list, history=history)
 
-@app.route('/coursefinder/catalog/<dept>')
+@app.route('/catalog/<dept>')
 def dept_page(dept):
     dept = dept.upper()
 
@@ -74,7 +74,7 @@ def dept_page(dept):
 
     return render_template('dept.html',dept=dept,courses=course_list,history=history)
 
-@app.route('/coursefinder/catalog/<dept>/<course_id>')
+@app.route('/catalog/<dept>/<course_id>')
 def course_page(dept, course_id):
     try: #format id, else tell user that id is invalid
         formatted_id = format_id(course_id)
@@ -106,7 +106,7 @@ def course_page(dept, course_id):
 
     return render_template("course.html", course=result, form=form, history = history, reviews=review_list)
 
-@app.route('/coursefinder/catalog/<dept>/<course_id>/submit')
+@app.route('/catalog/<dept>/<course_id>/submit')
 def submit_review(dept, course_id, methods=['POST','GET']):
     formatted_id = format_id(course_id)
     form = ReviewForm(request.args).remove_csrf()
@@ -118,16 +118,14 @@ def submit_review(dept, course_id, methods=['POST','GET']):
         flash('Thanks for submitting a review')
     return redirect('/coursefinder/catalog/'+dept+"/"+course_id)
     
-@app.route('/coursefinder/api')
+@app.route('/api')
 def api(methods=['POST','GET']):
-#    data = {'hello':'world'}
     data = api_search(dbsession,request)
-    #api will go here
     return jsonify(**data)
 
-@app.route('/coursefinder/api/docs')
+@app.route('/api/docs')
 def api_docs():
-    return "Documentation for API"
+    return render_template('api_docs.html', history=history)
 
 @app.route('/')
 def go_to_main_page():

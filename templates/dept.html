@@ -6,7 +6,7 @@
 <h1 class="dept_name">{{ dept }}</h1>
 <div class="course_list">
 {% for course in courses %}
-  <p class="course_title"><a href="/coursefinder/catalog/{{dept}}/{{course.dept}}{{course.number}}">
+  <p class="course_title"><a href="/catalog/{{dept}}/{{course.dept}}{{course.number}}">
     {{ course.id }} {{ course.title }}
   </p></a>
 {% endfor %}
