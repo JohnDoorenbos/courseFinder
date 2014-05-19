@@ -7,9 +7,9 @@
 <div class="course_list">
   {% for course in courses %}
   <div class="col-md-4 course">
-    <p class="course_title">{{ course.id }}<a href="/coursefinder/catalog/{{dept}}/{{course.dept}}{{course.number}}">
+    <p class="course_title">{{ course.id }}<a href="/catalog/{{dept}}/{{course.dept}}{{course.number}}">
 	{{ course.title }}
-    </p></a>
+    </a></p>
   </div>
   {% endfor %}
 </div>

@@ -7,7 +7,7 @@
 
 <div class="results">
   {% for course in courses %}
-  {% with link = "/coursefinder/catalog/"+course.dept+"/"+course.dept+course.number %}
+  {% with link = "/catalog/"+course.dept+"/"+course.dept+course.number %}
 
   <div class="col-md-6 course">
     <h2 class="course_title">{{course.id}}: <a href={{link}}>{{course.title}}</a></h2>
