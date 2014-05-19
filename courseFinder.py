@@ -6,8 +6,8 @@ import re, random
 dbsession = loadSession()
 
 def format_id(course_id):
-    #takes an id like 'cs200' and return 'CS 200'
-    #mostly used for preparing ids from urls to be used in the database
+    '''takes an id like 'cs200' and return 'CS 200'
+    mostly used for preparing ids from urls to be used in the database'''
     formatted_id = course_id.upper()
     match = re.match('^([A-Z]+)(\d{3}.?)$',formatted_id)
     if match:
@@ -114,9 +114,14 @@ def submit_review(dept, course_id, methods=['POST','GET']):
     
 @app.route('/coursefinder/api')
 def api(methods=['POST','GET']):
-    data = {'hello':'world'}
+#    data = {'hello':'world'}
+    data = api_search(dbsession,request)
     #api will go here
     return jsonify(**data)
+
+@app.route('/coursefinder/api/docs')
+def api_docs():
+    return "Documentation for API"
 
 @app.route('/')
 def go_to_main_page():

@@ -36,17 +36,17 @@ def search( title = None, dept = None, gen_eds = None, prereqs = None, professor
     
     string = "" 
     for key in params:
-        print(params[key])
         if params[key] and type(params[key]) is str:# and key != 'dept':
             string += ".filter(CourseDB."+key+".like('%"+params[key]+"%'))" #Some bugs occuring due to the "like()" function
         
         #if key == 'dept':
-        #    string += ".filter(CourseDB."+key+"='"+params[key]+"')"
-        #    print("here")
+        #    print("In dept if")
+        #    string += ".filter(CourseDB.dept='"+params[key]+"')"
+            #    print("here")
 
         #maybe have an if statement for everything but dept. These calls would have the "like()" function
         
-                
+    print(string)            
     result ="res" + string + ".all()"
     
     print("SEARCH QUERY: "+ eval('result')) #Prints final sqlAlchemy query
@@ -80,6 +80,37 @@ def results_page_search(dbsession,request):
     print("")
 #    print(result)
     return sorted(list(result))
+
+def api_search(dbsession,request):
+    res = dbsession.query(CourseDB)
+    gen_eds_list = request.args.getlist("gen_eds")
+    
+    search_string = "search("
+    for i in request.args:
+        if i != "gen_eds":
+            search_string += i+"="+"'"+request.args[i]+"'"+", "
+
+    new_search_string = ""
+    to_become_set = []
+    if len(gen_eds_list) == 0:
+        search_string += "ses = res)"
+        to_become_set = eval(search_string)
+    for gen_ed in gen_eds_list:
+        new_search_string = str(search_string+"gen_eds = "+"'"+gen_ed+"'" + ", ses = res)")
+        temp = eval(new_search_string)
+        print(new_search_string, "WHAT IS GOING ON...?")
+        print(temp)
+        to_become_set += temp #this gets us our combination of lists. 
+    to_become_dict =list(set(to_become_set))
+    result = {}
+    for course in to_become_dict:
+        result[course.id] = {'title':course.title, 'number':course.number, 'id':course.id, 'dept':course.id, 'desc':course.desc, 'same_as':course.same_as, 'gen_eds':course.gen_eds, 'hours':course.hours}#, 'professors':course.professors}
+   
+    
+
+    return result
+    
+    
 
 #----------------------------------------------------------------------
 

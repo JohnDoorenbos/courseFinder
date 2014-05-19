@@ -1,15 +1,7 @@
 ****PRIORITIES****
 
-Displaying Reviews
-
-Deploying on Heroku (I'll ask today)
-
 What's it look like on a phone? (And Styling)
 
-Catalog
-
-
-Sorting results consistently
 <------------------Things for John to look at:------------------->
 
 Searching through the sql alchemy tables for reviews, in particular for creating a unique identifier for new reviews being added (think integers)
