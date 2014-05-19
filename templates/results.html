@@ -10,16 +10,19 @@
   {% with link = "/catalog/"+course.dept+"/"+course.dept+course.number %}
 
   <div class="col-md-6 course">
-    <h2 class="course_title">{{course.id}}: <a href={{link}}>{{course.title}}</a></h2>
+    <h2 class="course_title">{{course.id}}: <a href={{link}}>
+      {% if course.title|length() > 30 %}
+      {{ course.title[:30]+"..." }}
+      {% else %}
+      {{ course.title }}
+      {% endif %}
+    </a></h2>
 
     
     <p class="course_details">
     {% if course.geneds != 'N/A' %}  
       General Education Fulfillments: {{course.gen_eds}}    
-    {% endif%}
-    {% if course.prereqs != 'N/A' %}
-    <br>Prerequisites: {{course.prereqs}}
-    {% endif%}
+    {% endif %}
     </p>
     <p class="course_hours">{{course.hours}}</p>
   </div>

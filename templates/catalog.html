@@ -3,9 +3,9 @@
 {% block content %}
 {{ super() }}
 
-<div class="dept_list"
+<div class="dept_list">
 {% for dept in depts %}
-  <p class="dept"><a href="/catalog/{{dept}}">
+  <p class="col-md-4 col-sm-6 dept"><a href="/catalog/{{dept}}">
     Catalog for {{dept}}
   </a></p>
 {% endfor %}

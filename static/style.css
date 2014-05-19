@@ -58,8 +58,7 @@ form {}
     -moz-border-radius: 5px;
 }
 
-.review_list {}
-.review {
+.review_list {
     background-color: #FFFFFF;
 
     margin-bottom: 2px;
@@ -70,4 +69,23 @@ form {}
     border-color: #DCDCDC;
     border-radius: 5px;
     -moz-border-radius: 5px;
+}
+.review {}
+
+#norsecourse {
+    font-weight: bold;
+    font-size: 40px;
+    font-variant: small-caps;
+}
+
+#title {}
+#dept {}
+#gen_eds {
+    height: 150px;
+    width: 200px;
+}
+#stars {}
+#content {
+    height: 150px;
+    width: 500px;
 }

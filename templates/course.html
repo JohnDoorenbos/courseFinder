@@ -28,7 +28,9 @@
   <div class="review">
     <p>Rating: {{review.stars}}</p>
     <p>{{review.content}}</p>
-    <br/>
+    {% if review != reviews|last() %}
+    <hr/>
+    {% endif %}
   </div>
   {% endfor %}
 </div>

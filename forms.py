@@ -26,6 +26,7 @@ class CourseQueryForm(CustomForm):
                                            ('Wel','Wel')], id="gen_eds")
 
 class ReviewForm(CustomForm):
-    stars = IntegerField('Stars (1-5)', [validators.DataRequired(),
-                                         validators.NumberRange(1,5)])
-    content = TextAreaField('Content')
+    stars = IntegerField('Rating (1-5)', [validators.DataRequired(),
+                                          validators.NumberRange(1,5)],
+                         id="stars")
+    content = TextAreaField('Content',id="content")

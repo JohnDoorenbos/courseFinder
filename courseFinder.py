@@ -116,7 +116,7 @@ def submit_review(dept, course_id, methods=['POST','GET']):
         db.session.add(review)
         db.session.commit()
         flash('Thanks for submitting a review')
-    return redirect('/coursefinder/catalog/'+dept+"/"+course_id)
+    return redirect('/catalog/'+dept+"/"+course_id)
     
 @app.route('/api')
 def api(methods=['POST','GET']):
