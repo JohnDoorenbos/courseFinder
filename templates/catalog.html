@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ super() }}
+
+<div class="dept_list"
+{% for dept in depts %}
+  <p class="dept"><a href="/catalog/{{dept}}">
+    Catalog for {{dept}}
+  </a></p>
+{% endfor %}
+</div>
+
+{% endblock content %}

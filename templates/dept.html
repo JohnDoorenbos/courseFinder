@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ super() }}
+
+<h1 class="dept_name">{{ dept }}</h1>
+<div class="course_list">
+  {% for course in courses %}
+  <div class="col-md-4 course">
+    <p class="course_title">{{ course.id }}<a href="/catalog/{{dept}}/{{course.dept}}{{course.number}}">
+	{{ course.title }}
+    </a></p>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock content %}

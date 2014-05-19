@@ -4,7 +4,9 @@ from flask_wtf import Form
 from wtforms import IntegerField, TextAreaField, TextField, BooleanField, SubmitField, SelectMultipleField, validators 
 from flask.ext.sqlalchemy import SQLAlchemy
 
-
+import os
+import psycopg2
+import urlparse
 
     
 app = Flask(__name__)
@@ -12,8 +14,14 @@ Bootstrap(app)
 app.secret_key = "luther"
 
 db = SQLAlchemy(app)
-dbPath = 'sqlite:////tmp/CF1.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = dbPath
+
+if 'DATABASE_URL' in os.environ:
+    dbPath =  'postgresql+pg8000://flnqsqilzhheoo:mkz5h36UA7R63Om9dPPQ1X4M5i@ec2-54-83-196-217.compute-1.amazonaws.com:5432/dcagbs1vl8cb22'#os.environ['DATABASE_URL']
+else:
+    dbPath = 'sqlite:////tmp/cf.db'
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] =  dbPath
 
 #------------------Defining our Models for the database----------------------------------------------
 
@@ -47,7 +55,8 @@ class Course(db.Model):
         self.id = id
         self.professors = professors
         self.same_as = same_as
-
+    def __str__(self):
+        return(self.title +" " + self.id + " " + self.gen_eds)
 class Review(db.Model):
     __tablename__ = "reviews"
     review_id = db.Column(db.Integer, primary_key = True)
@@ -98,5 +107,16 @@ class History(): #Doesn't update when back button is used.
         return(result)
 
 history = History()            
-            
+'''           
+urlparse.uses_netloc.append("postgres")
+url = urlparse.urlparse(os.environ['DATABASE_URL'])
 
+conn = psycopg2.connect(
+    database = url.path[1:],
+    user = url.username,
+    password=url.password,
+    host=url.hostname,
+    port=url.port
+)
+    
+'''
