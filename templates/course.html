@@ -2,6 +2,7 @@
 
 {% block title %}{{ course.id }} {{ course.title }}{% endblock %}
 
+{% block brand %} {{course.id }} {% endblock brand %}
 {% block content %}
 {{ super() }}  
 <div class="course">
