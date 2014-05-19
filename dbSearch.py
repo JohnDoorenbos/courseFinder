@@ -31,22 +31,15 @@ def search( title = None, dept = None, gen_eds = None, prereqs = None, professor
     '''This method essentially employs the accumlutator method to create a string that looks like an sqlAlchemy query. The string is evaluated in return statement, and a list of DB entries that match the query is returned'''
     temp = locals() #makes a dictionary of all of the parameters
     params = dict(temp) # creates a new dictionary of parameters, this one doesn't change as you add new locals.
-    
-    res = ses
-    
+    if dept:
+        res = ses.filter(CourseDB.dept == dept.upper())
+    else:
+        res = ses
     string = "" 
     for key in params:
-        if params[key] and type(params[key]) is str:# and key != 'dept':
+        if params[key] and type(params[key]) is str and key != 'dept':
             string += ".filter(CourseDB."+key+".like('%"+params[key]+"%'))" #Some bugs occuring due to the "like()" function
-        
-        #if key == 'dept':
-        #    print("In dept if")
-        #    string += ".filter(CourseDB.dept='"+params[key]+"')"
-            #    print("here")
 
-        #maybe have an if statement for everything but dept. These calls would have the "like()" function
-        
-    print(string)            
     result ="res" + string + ".all()"
     
     print("SEARCH QUERY: "+ eval('result')) #Prints final sqlAlchemy query
