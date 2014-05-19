@@ -15,7 +15,7 @@ app.secret_key = "luther"
 
 db = SQLAlchemy(app)
 
-if os.environ['DATABASE_URL']:
+if 'DATABASE_URL' in os.environ:
     dbPath =  'postgresql+pg8000://flnqsqilzhheoo:mkz5h36UA7R63Om9dPPQ1X4M5i@ec2-54-83-196-217.compute-1.amazonaws.com:5432/dcagbs1vl8cb22'#os.environ['DATABASE_URL']
 else:
     dbPath = 'sqlite:////tmp/cf.db'
