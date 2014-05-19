@@ -5,8 +5,8 @@ from wtforms import IntegerField, TextAreaField, TextField, BooleanField, Submit
 from flask.ext.sqlalchemy import SQLAlchemy
 
 import os
-import psycopg2
-import urlparse
+#import psycopg2
+#import urlparse
 
     
 app = Flask(__name__)
