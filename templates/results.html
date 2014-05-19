@@ -11,9 +11,17 @@
 
   <div class="course">
     <h2 class="course_title">{{course.id}}: <a href={{link}}>{{course.title}}</a></h2>
+
+    
+    <p class="course_details">
+    {% if course.geneds != 'N/A' %}  
+      General Education Fulfillments: {{course.gen_eds}}    
+    {% endif%}
+    {% if course.prereqs != 'N/A' %}
+    <br>Prerequisites: {{course.prereqs}}
+    {% endif%}
+    </p>
     <p class="course_hours">{{course.hours}}</p>
-    <p class="course_details">General Education Fulfillments: {{course.gen_eds}}
-    <br>Prerequisites: {{course.prereqs}}</p>
   </div>
   {% endwith %}
   {% endfor %}

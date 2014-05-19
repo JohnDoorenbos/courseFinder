@@ -9,9 +9,17 @@
   <p class="course_hours">{{course.hours}}</p>
 
   <p class="course_details">{{course.desc}}
-  <br/>Prerequisites: {{course.prereqs}}
-  <br/>Same as: {{course.same_as}}
-  <br/>General education fulfillments: {{course.gen_eds}}</p>
+    {% if course.prereqs != 'N/A' %}
+    <br/>Prerequisites: {{course.prereqs}}
+    {% endif %}
+    {% if course.same_as != 'N/A' %}
+    <br/>Same as: {{course.same_as}}
+    {% endif %}
+    {% if course.geneds != 'N/A' %}
+    <br/>General education fulfillments: {{course.gen_eds}}
+    {% endif %}
+  </p>
+  
 </div>
 
 <h2>Reviews</h1>
