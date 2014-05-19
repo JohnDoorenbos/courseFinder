@@ -5,6 +5,12 @@ import re, random
 
 dbsession = loadSession()
 
+def listify(s):
+    if s == 'N/A':
+        return []
+    else:
+        return [i.strip() for i in s.split(',')]
+
 def format_id(course_id):
     '''takes an id like 'cs200' and return 'CS 200'
     mostly used for preparing ids from urls to be used in the database'''
@@ -89,7 +95,7 @@ def course_page(dept, course_id):
     #and concatenate them together
     res = dbsession.query(CourseDB)
     course = res.filter(CourseDB.id == formatted_id).one()
-    for same_course in eval(course.same_as):
+    for same_course in listify(course.same_as):
         additional_reviews = dbsession.query(ReviewDB).filter(ReviewDB.course_id == same_course)
         review_list += list(additional_reviews)
 
