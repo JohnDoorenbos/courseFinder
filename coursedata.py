@@ -95,21 +95,20 @@ def post_process(course):
     if 'prereqs' not in course:
         course['prereqs'] = 'N/A'
 
-    #removes '.' from end of 'sameas' if present, and converts sameas
-    #into str of a list
+    #removes '.' from end of 'sameas' if present and makes it so
+    #courses are separated by commas instead of 'and'
     if 'same_as' in course:
         if course['same_as'][-1] == '.':
             course['same_as'] = course['same_as'][:-1]
-        course['same_as'] = str(course['same_as'].split(' and '))
+        course['same_as'] = course['same_as'].replace(' and ',', ')
     else:
-        course['same_as'] = '[]'
+        course['same_as'] = 'N/A'
 
     #removes 'Note: ...' geneds that were incorrectly caught by re
-    #otherwise splits geneds into list, then remove 'S', 'R' and 'W'
-    #geneds from the list, and stores the str of the list as gen_eds
+    #otherwise removes various geneds, such as 'E', 'S', and 'R'
     if 'gen_eds' in course:
         if 'Note:' in course['gen_eds']:
-            course['gen_eds'] = '[]'
+            course['gen_eds'] = 'N/A'
         else:
             #fixes '.' typos
             while '.' in course['gen_eds']:
@@ -144,10 +143,13 @@ def post_process(course):
             except:
                 pass
 
-            course['gen_eds'] = str(course['gen_eds'])
+            if len(course['gen_eds']) == 0:
+                course['gen_eds'] = 'N/A'
+            else:
+                course['gen_eds'] = ', '.join(course['gen_eds'])
 
     else: #so 'gen_eds' not in course
-        course['gen_eds'] = '[]'
+        course['gen_eds'] = 'N/A'
 
     return course
 
