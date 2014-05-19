@@ -28,6 +28,6 @@ def main():
             print str(int(cur_percent))+' %'
         
     print 'COMPLETE'
-    return str(course_data)
+
 if __name__ == "__main__":
     main()

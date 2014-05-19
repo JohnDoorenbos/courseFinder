@@ -5,11 +5,11 @@
 
 <h1>Results</h1>
 
-<div class="course_list">
+<div class="results">
   {% for course in courses %}
   {% with link = "/coursefinder/catalog/"+course.dept+"/"+course.dept+course.number %}
 
-  <div class="course">
+  <div class="col-md-6 course">
     <h2 class="course_title">{{course.id}}: <a href={{link}}>{{course.title}}</a></h2>
 
     

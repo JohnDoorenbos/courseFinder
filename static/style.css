@@ -1,7 +1,8 @@
 body {
     font-family: "Verdana", verdana, arial, helvetica, sans-serif;
-    font-size: 11px;
+    font-size: 14px;
     background: url(/static/katie.png);
+    padding: 10px;
 }
 
 h1 {
@@ -12,18 +13,61 @@ h1 {
     margin-bottom 6pt;
 }
 
-h2 {}
+h2 {
+    color: #777777;
+    font-weight: bold;
+    font-size: 20px;
+}
+
 p {}
 form {}
 
 .course_list {}
-.course {}
+.course {
+    background-color: #FFFFFF;
+
+    margin-bottom: 2px;
+
+    border-style: solid;
+    border-width: 1px;
+    border-bottom-width: 3px;
+    border-color: #DCDCDC;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+
+.course_list .course {
+    height: 50px;
+}
+
 .course_title {}
 .course_hours {}
 .course_details {}
 
 .dept_list {}
-.dept {}
+.dept {
+    background-color: #FFFFFF;
+
+    margin-bottom: 2px;
+
+    border-style: solid;
+    border-width: 1px;
+    border-bottom-width: 3px;
+    border-color: #DCDCDC;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+}
 
 .review_list {}
-.review {}
+.review {
+    background-color: #FFFFFF;
+
+    margin-bottom: 2px;
+
+    border-style: solid;
+    border-width: 1px;
+    border-bottom-width: 3px;
+    border-color: #DCDCDC;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+}

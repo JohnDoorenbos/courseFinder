@@ -5,11 +5,13 @@
 
 <h1 class="dept_name">{{ dept }}</h1>
 <div class="course_list">
-{% for course in courses %}
-  <p class="course_title"><a href="/coursefinder/catalog/{{dept}}/{{course.dept}}{{course.number}}">
-    {{ course.id }} {{ course.title }}
-  </p></a>
-{% endfor %}
+  {% for course in courses %}
+  <div class="col-md-4 course">
+    <p class="course_title">{{ course.id }}<a href="/coursefinder/catalog/{{dept}}/{{course.dept}}{{course.number}}">
+	{{ course.title }}
+    </p></a>
+  </div>
+  {% endfor %}
 </div>
 
 {% endblock content %}
