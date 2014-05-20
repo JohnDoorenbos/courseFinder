@@ -11,16 +11,19 @@ def listify(s):
     else:
         return [i.strip() for i in s.split(',')]
 
-def format_id(course_id):
+def id_from_url(course_id):
     '''takes an id like 'cs200' and return 'CS 200'
     mostly used for preparing ids from urls to be used in the database'''
-    formatted_id = course_id.upper()
-    match = re.match('^([A-Z]+)(\d{3}.?)$',formatted_id)
+    match = re.match('^([A-Z]+)(\d{3}(-\d{3})*.?)$',course_id.upper())
     if match:
-        formatted_id = str(match.group(1) + ' ' + match.group(2))
-        return formatted_id
+        dept = str(match.group(1))
+        number = str(match.group(2)).replace('-',', ')
+        return dept + ' ' + number
     else:
         raise(ValueError,'\''+course_id+'\' is not a valid course id')
+
+def id_to_url(course_id):
+    return str(course_id.replace(', ','-').remove(' '))
 
 def get_depts():
     res = dbsession.query(CourseDB)
@@ -77,7 +80,7 @@ def dept_page(dept):
 @app.route('/catalog/<dept>/<course_id>')
 def course_page(dept, course_id):
     try: #format id, else tell user that id is invalid
-        formatted_id = format_id(course_id)
+        formatted_id = id_from_url(course_id)
     except ValueError:
         return '\''+course_id+'\' is not a valid course id.'
 
@@ -108,7 +111,7 @@ def course_page(dept, course_id):
 
 @app.route('/catalog/<dept>/<course_id>/submit')
 def submit_review(dept, course_id, methods=['POST','GET']):
-    formatted_id = format_id(course_id)
+    formatted_id = id_from_url(course_id)
     form = ReviewForm(request.args).remove_csrf()
     if form.validate():
         print 'form validated'

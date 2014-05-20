@@ -13,6 +13,8 @@
   </dd>
 {% endmacro %}
 
+{% macro id_to_url(course_id) %}{{ course_id|replace(", ","-")|replace(" ","") }}{% endmacro %}
+
 {% block navbar %}
 <link rel="stylesheet" href="/static/style.css">
 
@@ -50,8 +52,6 @@
 <br />
 <br />   <!-- These lines kept the nav bar from covering up content.-->
 <br />
-<br />
-
 
 {% endblock %}
 

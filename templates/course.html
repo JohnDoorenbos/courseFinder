@@ -37,7 +37,7 @@
 </div>
 
 <h2>Submit Review</h1>
-<form method="GET", action="/catalog/{{course.dept}}/{{course.dept}}{{course.number}}/submit">
+<form method="GET", action="/catalog/{{course.dept}}/{{id_to_url(course.id)}}/submit">
   {% for field in form %}
   {{ render_field(field) }}
   {% endfor %}

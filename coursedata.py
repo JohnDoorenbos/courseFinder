@@ -86,6 +86,8 @@ def post_process(course):
     if course['dept'] == 'Paideia':
         course['dept'] = 'PAID'
 
+    course['id'] = course['id'].replace('/',', ')
+
     if 'hours' not in course:
         course['hours'] = 'N/A'
 
