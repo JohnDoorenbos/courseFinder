@@ -5,6 +5,8 @@ import re, random
 
 dbsession = loadSession()
 
+#---------------------------Helper Functions-------------------------------#
+
 def listify(s):
     if s == 'N/A':
         return []
@@ -21,6 +23,7 @@ def id_from_url(course_id):
         return dept + ' ' + number
     else:
         raise(ValueError,'\''+course_id+'\' is not a valid course id')
+
 
 def id_to_url(course_id):
     return str(course_id.replace(', ','-').remove(' '))
@@ -49,6 +52,9 @@ def next_review_id():
             new_id = review_id + 1
             if new_id not in review_id_list:
                 return new_id
+
+#------------------------------------------------------------------------#
+
 
 @app.route('/coursefinder')
 def main_page():
@@ -120,7 +126,10 @@ def submit_review(dept, course_id, methods=['POST','GET']):
         db.session.commit()
         flash('Thanks for submitting a review')
     return redirect('/catalog/'+dept+"/"+course_id)
-    
+@app.route('/about')
+def about_page():
+    return render_template('about.html', history = history)
+
 @app.route('/api')
 def api(methods=['POST','GET']):
     data = api_search(dbsession,request)
@@ -128,7 +137,7 @@ def api(methods=['POST','GET']):
 
 @app.route('/api/docs')
 def api_docs():
-    return render_template('api_docs.html', history=history)
+    return render_template('api_docs.html', history = history)
 
 @app.route('/')
 def go_to_main_page():
@@ -136,3 +145,5 @@ def go_to_main_page():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+

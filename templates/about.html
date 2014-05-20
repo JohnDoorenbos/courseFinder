@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %} About {% endblock%}
+{% block brand %} About {% endblock brand %}
+
+{% block content %}
+{{ super() }}
+
+<h1>About</h1>
+
+<div class="course">
+  <h2>Norse Course</h2>
+  <p> A website designed by students for students. It offers various functionalities, including a user friendly catalog, a catalog search, and course reviews.
+
+<h2>Search</h2>
+<p>The catalog search tool allow students to search for courses according to department, title keyword, and most importantly, general education fulfillment. This allows the student to find the courses they need to take easily and quickly, while at the same time showing them classes they never would have known existed! For example, who would have known you could satisfy your Natural World Non-Lab requirement with <a href="/catalog/CLAS/CLAS310">CLAS 310: Anciet Sciences</a>? This functionality will open a whole new world of classes to students. </p>
+    
+<h2>Catalog</h2>
+<p> The catalog offers a user friendly interface for students to navigate the all of the classes offered on a regular basis by Luther College. Separated by department, students can easily view each course offered by a certain department.</p>
+
+<h2>Reviews</h2>
+<p>Norse Course provides a unique functionality in that it lets students review course they have alredy taken. This service offers a few bonuses. It allows students to expand on the course descriptions provided by Luther College, giving others a better idea of what the class is really about. This can also be used to give students interested in taking the course tips as to how they can effectively take the course. These reviews will be monitored and removed if deemed inappropriate.</p>
+
+<h2>API</h2>
+<p>If you are interested in using some of the functionality we have implemented here for your own wed applications, you can find details on how to use our custom built API <a href="/api/docs"> here</a>.</p>
+<h2>More information</h2>
+ <p> This Norse Course website was developed by Michael Moore ('16) and John Doorenbos ('16), both computer science majors, as a final project for a Internet Programming class. If you have any questions, comments, or ideas for future development you'd like to share, shoot an email to <b>norsecourse16@gmail.com</b> </p>
+</div>
+
+{% endblock %}
