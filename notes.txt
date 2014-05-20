@@ -1,9 +1,11 @@
 ****PRIORITIES****
 
-What's it look like on a phone? (And Styling)
+Broken catalog links? 
 
 
 #########Thoughts for new development:##########
+Using current semester information. (This will start including professors)
+
 Make links out of the different gen_eds and what not.
 
 Reviews (upvotes downvotes)
@@ -13,6 +15,8 @@ functions for managing database (review management)
 Major requirements in department pages
 
 Having a little sort by drop down in the results page
+
+Add more api functionality?
 ################################################
 
 
