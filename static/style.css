@@ -85,6 +85,9 @@ form {}
     width: 200px;
 }
 #stars {}
+#professors {
+    height: 27px;
+}
 #content {
     height: 150px;
     width: 500px;
