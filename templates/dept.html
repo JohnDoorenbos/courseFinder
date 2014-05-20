@@ -4,6 +4,10 @@
 
 {% block content %}
 {{ super() }}
+<p class="nav_tree">
+  <a href="/catalog">Catalog</a> &#8594
+  <b>{{ dept }}</b>
+</p>
 
 <h1 class="dept_name">{{ dept }}</h1>
 <div class="course_list">

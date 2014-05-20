@@ -5,6 +5,12 @@
 {% block brand %} {{course.id }} {% endblock brand %}
 {% block content %}
 {{ super() }}  
+<p class="nav_tree">
+  <a href="/catalog">Catalog</a> &#8594
+  <a href="/catalog/{{course.dept}}">{{course.dept}}</a> &#8594
+  <b>{{course.id}}</b>
+</p>
+
 <div class="course">
   <h2 class="course_title">{{course.id}} {{course.title}}</h2>
   <p class="course_hours">{{course.hours}}</p>
