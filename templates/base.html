@@ -38,7 +38,7 @@
 	  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Recently Visited<b class="caret"></b></a>
 	  <ul class="dropdown-menu">
 	    {% for course in history.courses %}
-	    {% with link = "/catalog/"+course.dept+"/"+course.dept+course.number %}
+	    {% with link = "/catalog/"+course.dept+"/"+id_to_url(course.id) %}
 	    <li><a href={{link}}>{{course.id}}: {{course.title}}</a></li>
 	    {% endwith %}
 	    {% endfor%}
