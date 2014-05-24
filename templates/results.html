@@ -11,7 +11,7 @@
   {% for course in courses %}
   {% with link = "/catalog/"+course.dept+"/"+id_to_url(course.id) %}
 
-  <div class="col-md-6 course">
+  <div class="col-md-6 col-lg-4 course">
     <h2 class="course_title" title="{{course.title}}">{{course.id}}: <a href={{link}}>
       {% if course.title|length() > 30 %}
       {{ course.title[:30]+"..." }}
