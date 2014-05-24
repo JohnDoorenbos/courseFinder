@@ -1,0 +1,18 @@
+* Database
+** Gen eds
+Many-to-many relationship with courses. Some gen eds have extra text (eg 'NWNL when taken with...'); this extra information should be stored in the course as 'Notes'.
+** Incorporating Spreadsheet with Detailed Info
+Has section name, min credits, max credits, title, faculty first name, faculty last names, buidling, room, start time, end time, days, 7 weeks
+** Database Management
+Creating functions to reset courses, but not reviews.
+* Misc
+** Page Icon
+Now we just have the blank white square. It could be nice to have something like a interlocked N and C instead.
+* New Features
+** Schedule Planner
+*** List of interested courses
+Course pages should have a button to add to the list of courses they are interested in
+*** Detect time conflicts and suggest schedules that work
+*** Warn about prequisites
+*** Suggest courses to fufill specific gen eds
+** Accounts?
