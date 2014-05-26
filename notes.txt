@@ -4,6 +4,8 @@ Broken catalog links?
 
 
 #########Thoughts for new development:##########
+Schedule planner? (Way to fulfill gen_eds?)
+
 Using current semester information. (This will start including professors)
 
 Make links out of the different gen_eds and what not.
@@ -11,7 +13,7 @@ Make links out of the different gen_eds and what not.
 Reviews (upvotes downvotes)
 
 functions for managing database (review management)
-
+    dropping course from database but not each semester
 Major requirements in department pages
 
 Having a little sort by drop down in the results page

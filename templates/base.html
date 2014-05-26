@@ -15,6 +15,11 @@
 
 {% macro id_to_url(course_id) %}{{ course_id|replace(", ","-")|replace(" ","") }}{% endmacro %}
 
+{% block favicon%}
+<link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon">
+<link rel="icon" href="static/favicon.ico" type="image/x-icon">
+{% endblock%}
+
 {% block navbar %}
 <link rel="stylesheet" href="/static/style.css">
 
