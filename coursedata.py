@@ -26,6 +26,8 @@ def parse_coursedescriptions(text,course):
     the same as (if any), and gened fulfillments (if any). It stores these
     in the 'desc', 'prereqs', 'sameas', and 'geneds' keys respectively'''
 
+    course['raw_desc'] = text
+
     #checks for most complicated matches first, assigning others to None
     match1 = re.match('^(.*) Prerequisites?: (.*?)\..*?\((.*)\) ?$', text)
     if match1:
@@ -82,6 +84,9 @@ def post_process(course):
     #performs misc post processing on courses, including
     #assigning appropriate values for missing keys
 
+    #set notes to empty list
+    course['notes'] = []
+
     #changes dept of Paideia courses to conform with other depts
     if course['dept'] == 'Paideia':
         course['dept'] = 'PAID'
@@ -110,6 +115,7 @@ def post_process(course):
     #otherwise removes various geneds, such as 'E', 'S', and 'R'
     if 'gen_eds' in course:
         if 'Note:' in course['gen_eds']:
+            course['notes'].append(course['gen_eds'])
             course['gen_eds'] = 'N/A'
         else:
             #fixes '.' typos
@@ -117,26 +123,13 @@ def post_process(course):
                 course['gen_eds'] = course['gen_eds'].replace('.',',')
             course['gen_eds'] = course['gen_eds'].split(', ')
 
-            try:
-                course['gen_eds'].remove('E')
-            except:
-                pass
-            try:
-                course['gen_eds'].remove('R')
-            except:
-                pass
-            try:
-                course['gen_eds'].remove('S')
-            except:
-                pass
-            try:
-                course['gen_eds'].remove('W')
-            except:
-                pass
-            try:
-                course['gen_eds'].remove('Intel')
-            except:
-                pass
+            #remove unknown gen_eds
+            gen_eds_to_remove = ['E','R','S','W','Intel','L']
+            for gen_ed in gen_eds_to_remove:
+                try:
+                    course['gen_eds'].remove(gen_ed)
+                except ValueError:
+                    pass
 
             #replace misspelled 'Inctl' with 'Intcl'
             try:
@@ -145,13 +138,32 @@ def post_process(course):
             except:
                 pass
 
+            #replace conditional gen_eds with basic ones
+            #and add condition to course['notes']
+            for gen_ed in course['gen_eds']:
+                if len(gen_ed) > 5:
+                    new_gen_ed = ""
+                    cur_char = gen_ed[0]
+                    while cur_char.isupper():
+                        new_gen_ed += cur_char
+                        cur_char = gen_ed[len(new_gen_ed)]
+                    course['notes'].append(gen_ed)
+                    course['gen_eds'].remove(gen_ed)
+                    course['gen_eds'].append(new_gen_ed)
+
             if len(course['gen_eds']) == 0:
                 course['gen_eds'] = 'N/A'
             else:
-                course['gen_eds'] = ', '.join(course['gen_eds'])
+                course['gen_eds'] = ', '.join(sorted(course['gen_eds']))
 
     else: #so 'gen_eds' not in course
         course['gen_eds'] = 'N/A'
+
+    #if no notes, sets to 'N/A', else joins them with newline
+    if len(course['notes']) == 0:
+        course['notes'] = 'N/A'
+    else:
+        course['notes'] = '\n'.join(course['notes'])
 
     return course
 
@@ -201,10 +213,13 @@ def get_course_data():
 def main():
     #test function, gets course data and prints it
     course_data = get_course_data()
-    dept_list = []
+    gen_ed_list = []
     for course in course_data:
-        if course['dept'] not in dept_list:
-            dept_list.append(course['dept'])
+        for gen_ed in course['gen_eds'].split(', '):
+            if gen_ed not in gen_ed_list:
+                gen_ed_list.append(gen_ed)
+        if course['notes'] != 'N/A':
+            print course['notes']
         #print 'id:', course['id']
         #print 'dept:', course['dept']
         #print 'number:', course['number']
@@ -214,9 +229,10 @@ def main():
         #print 'prereqs:', course['prereqs']
         #print 'same_as:', course['same_as']
         #print 'gen_eds:', course['gen_eds']
+        #print 'notes:', course['notes']
         #print ''
         pass
-    print sorted(dept_list)
+    print sorted(gen_ed_list)
 
                         
 
