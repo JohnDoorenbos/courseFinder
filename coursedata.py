@@ -208,18 +208,119 @@ def get_course_data():
 
     course_list = [post_process(course) for course in course_list]
 
-    return course_list
+    return sorted(course_list, key = lambda c: c['id'])
+
+def preprocess_sections(section_data):
+    processed_data = section_data
+
+    #remove the beginning lines before section data begins
+    line_num = 0
+    data_started = False
+    while not data_started:
+        if re.match('^[A-Z]+-\d{3}.?-[\dA-Z]+$',processed_data[line_num][0]):
+            data_started = True
+        else:
+            line_num += 1
+    processed_data = processed_data[line_num:]
+
+    #remove lines that do not have section id (talk w/ John about this)
+    lines_to_delete = []
+    for l in processed_data:
+        if l[0] == '':
+            lines_to_delete.append(l)
+    for l in lines_to_delete:
+        processed_data.remove(l)
+
+    #strip white spaces from all data
+    for i in range(len(processed_data)):
+        for j in range(len(processed_data[i])):
+            processed_data[i][j] = processed_data[i][j].strip()
+    
+    return processed_data
+
+def get_section_data(term):
+
+    #Make sure a valid term was entered
+    #and that data is available for the term
+    if re.match('\d{4}([Ff][Aa])|([Ss][Pp])',term):
+        try:
+            term_file_loc = 'sections/'+term.upper()+'.dat'
+            term_file = open(term_file_loc,'r')
+        except IOError:
+            print 'No data available for ' + term + ' sections.'
+            return []
+    else:
+        print 'Terms need the four digit year followed by a two-letter code (ie \'FA\' or \'SP\'). \'' + term + '\' is invalid'
+        return []
+
+    file_data = preprocess_sections([l.split('|') for l in term_file.readlines()])
+    term_file.close()
+    section_data = []
+
+    for l in file_data:
+        section = {}
+        section['id'] = l[0]
+        match = re.match('^([A-Z]+)-(\d{3}.?)-[\dA-Z]+$',l[0]) #how should we handle labs?
+        section['course_id'] = match.group(1) + ' ' + match.group(2)
+        section['min_credits'] = l[1]
+        if l[2] == '':
+            section['max_credits'] = l[1]
+        else:
+            section['max_credits'] = l[2]
+        section['title'] = l[3]
+        if l[4] == '':
+            section['instructor_first_name'] = 'N/A'
+        else:
+            section['instructor_first_name'] = l[4]
+        if l[5] == '':
+            section['instructor_last_names'] = 'N/A'
+        else:
+            section['instructor_last_names'] = ', '.join(l[5].split(','))
+        section['building'] = l[6]
+        section['room'] = l[7]
+        if l[8] == '':
+            section['start_time'] = 'N/A'
+        else:
+            section['start_time'] = l[8]
+        if l[9] == '':
+            section['end_time'] = 'N/A'
+        else:
+            section['end_time'] = l[9]
+        if l[10] == '':
+            section['days'] = 'N/A'
+        else: #What's 'TT'?
+            section['days'] = l[10].replace(' ','')
+        if l[11] == '':
+            section['seven_weeks'] = 'N/A'
+        elif re.match('[Ff]irst',l[11]):
+            section['seven_weeks'] = 'first'
+        elif re.match('[Ss]econd',l[11]):
+            section['seven_weeks'] = 'second'
+        section_data.append(section)
+    
+    return sorted(section_data, key = lambda s: s['id'])
+
+def get_all_vals(key,term=None):
+    '''function for debugging - prints list of all values
+    associated with key. Uses section data if term provided,
+    else uses course data'''
+    if term:
+        data = get_section_data(term)
+    else:
+        data = get_course_data()
+
+    all_vals = []
+    for d in data:
+        if d[key] not in all_vals:
+            all_vals.append(d[key])
+
+    return sorted(all_vals)
+        
 
 def main():
     #test function, gets course data and prints it
     course_data = get_course_data()
-    gen_ed_list = []
     for course in course_data:
-        for gen_ed in course['gen_eds'].split(', '):
-            if gen_ed not in gen_ed_list:
-                gen_ed_list.append(gen_ed)
-        if course['notes'] != 'N/A':
-            print course['notes']
         #print 'id:', course['id']
         #print 'dept:', course['dept']
         #print 'number:', course['number']
@@ -232,9 +333,6 @@ def main():
         #print 'notes:', course['notes']
         #print ''
         pass
-    print sorted(gen_ed_list)
-
-                        
 
 if __name__ == '__main__':
     main()
