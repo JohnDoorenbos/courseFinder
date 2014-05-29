@@ -40,6 +40,12 @@ form {}
     height: 50px;
 }
 
+.results .course_title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .course_title {}
 .course_hours {}
 .course_details {}
