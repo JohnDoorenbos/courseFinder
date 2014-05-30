@@ -210,6 +210,12 @@ def get_course_data():
 
     return sorted(course_list, key = lambda c: c['id'])
 
+
+#-----------Beginning of Sections data 
+
+
+
+
 def preprocess_sections(section_data):
     processed_data = section_data
 
@@ -319,8 +325,9 @@ def get_all_vals(key,term=None):
 
 def main():
     #test function, gets course data and prints it
-    course_data = get_course_data()
+    course_data = get_section_data("2014FA")
     for course in course_data:
+        print(course)
         #print 'id:', course['id']
         #print 'dept:', course['dept']
         #print 'number:', course['number']
