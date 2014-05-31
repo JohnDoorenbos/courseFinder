@@ -5,9 +5,29 @@ Many-to-many relationship with courses. Some gen eds have extra text (eg 'NWNL w
 Has section name, min credits, max credits, title, faculty first name, faculty last names, buidling, room, start time, end time, days, 7 weeks
 ** Database Management
 Creating functions to reset courses, but not reviews.
+
+** Searching
+***Title keyword Search is case sensitive
+PRIORITY: MED 
+I added a quick capitalize method to whatever word they search. Couldn't test with heroku because I can't push, but it should work. This only works when the user searchs for one word. 
+NOTE: Title keyword search may be removed in leiu of a general keyword search
+
+***Maybe implement a general keyword search?
+
+
 * Misc
 ** Page Icon
+PRIORITY: MED
 Now we just have the blank white square. It could be nice to have something like a interlocked N and C instead.
+** Display maintainence
+*** Mobile Display of results
+PRIORITY: LOW
+The new "..." feature on the results page is super slick, but when you go to a mobile device, you don't see much more than the course_id. Maybe a way to cut out course id and leave the title
+*** Expanding "Cookie Cutter" Dispaly
+PRIORIY: LOW   
+Someone mentioned that the display was pretty basic, which isn't really a big deal, but eventually it may be something we want to improve. Maybe have a persistent search in the side panel.  
+
+
 * New Features
 ** Schedule Planner
 *** List of interested courses
@@ -16,3 +36,7 @@ Course pages should have a button to add to the list of courses they are interes
 *** Warn about prequisites
 *** Suggest courses to fufill specific gen eds
 ** Accounts?
+
+
+*Things to think about
+**incorporating python and javascript

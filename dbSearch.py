@@ -37,6 +37,8 @@ def search( title = None, dept = None, gen_eds = None, prereqs = None, professor
         res = ses
     string = "" 
     for key in params:
+        if key == "title":
+            params[key] = params[key].capitalize()
         if params[key] and type(params[key]) is str and key != 'dept':
             string += ".filter(CourseDB."+key+".like('%"+params[key]+"%'))" #Some bugs occuring due to the "like()" function
 
