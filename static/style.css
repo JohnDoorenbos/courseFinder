@@ -3,6 +3,7 @@ body {
     font-size: 14px;
     background: url(/static/katie.png);
     padding: 10px;
+    text-align: center;
 }
 
 h1 {
@@ -83,6 +84,8 @@ form {}
     font-size: 40px;
     font-variant: small-caps;
 }
+
+.lead {}
 
 #title {}
 #dept {}

@@ -1,4 +1,11 @@
 * Database
+
+**Tables
+
+
+
+
+
 ** Gen eds
 Many-to-many relationship with courses. Some gen eds have extra text (eg 'NWNL when taken with...'); this extra information should be stored in the course as 'Notes'.
 ** Incorporating Spreadsheet with Detailed Info
@@ -15,7 +22,7 @@ NOTE: Title keyword search may be removed in leiu of a general keyword search
 ***Maybe implement a general keyword search?
 
 
-* Misc
+* Misc-a - 
 ** Page Icon
 PRIORITY: MED
 Now we just have the blank white square. It could be nice to have something like a interlocked N and C instead.
@@ -26,7 +33,7 @@ The new "..." feature on the results page is super slick, but when you go to a m
 *** Expanding "Cookie Cutter" Dispaly
 PRIORIY: LOW   
 Someone mentioned that the display was pretty basic, which isn't really a big deal, but eventually it may be something we want to improve. Maybe have a persistent search in the side panel.  
-
+***Centering the form on the page. 
 
 * New Features
 ** Schedule Planner
