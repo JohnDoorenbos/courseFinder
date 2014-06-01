@@ -325,8 +325,9 @@ def get_all_vals(key,term=None):
 
     all_vals = []
     for d in data:
-        if d[key] not in all_vals:
-            all_vals.append(d[key])
+        if key in d:
+            if d[key] not in all_vals:
+                all_vals.append(d[key])
 
     return sorted(all_vals)
         

@@ -53,6 +53,27 @@ def next_review_id():
             if new_id not in review_id_list:
                 return new_id
 
+def keyword_add(d,key):
+    if key in d:
+        d[key] += 1
+    else:
+        d[key] = 1
+
+def keyword_search(search_string,titles=True,descs=False,reviews=False):
+    keywords = [keyword.lower() for keyword in search_string.split()]
+    results = {}
+    for w in keywords:
+        for course in dbsession.query(CourseDB).all():
+            if titles and w in course.title.lower():
+                keyword_add(results,course)
+            if descs and w in course.desc.lower():
+                keyword_add(results,course)
+            if reviews:
+                pass
+                #no review searching yet
+    
+    return sorted(results, key = lambda k: results[k], reverse=True)
+
 #------------------------------------------------------------------------#
 
 
