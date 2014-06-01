@@ -80,7 +80,7 @@ def parse_coursedescriptions(text,course):
     else: #no prereqs, sameas, or geneds -- only desc
         course['desc'] = text
 
-def post_process(course):
+def postprocess_course(course):
     #performs misc post processing on courses, including
     #assigning appropriate values for missing keys
 
@@ -206,7 +206,7 @@ def get_course_data():
 
     course_list.append(cur_course) #append final course
 
-    course_list = [post_process(course) for course in course_list]
+    course_list = [postprocess_course(course) for course in course_list]
 
     return sorted(course_list, key = lambda c: c['id'])
 
@@ -265,8 +265,8 @@ def get_section_data(term):
 
     for l in file_data:
         section = {}
-        section['id'] = l[0]
-        match = re.match('^([A-Z]+)-(\d{3}.?)-[\dA-Z]+$',l[0]) #how should we handle labs?
+        section['id'] = l[0].replace('-',' ')
+        match = re.match('^([A-Z]+)-(\d{3}).?-[\dA-Z]+$',l[0])
         section['course_id'] = match.group(1) + ' ' + match.group(2)
         section['min_credits'] = l[1]
         if l[2] == '':
@@ -274,16 +274,24 @@ def get_section_data(term):
         else:
             section['max_credits'] = l[2]
         section['title'] = l[3]
-        if l[4] == '':
-            section['instructor_first_name'] = 'N/A'
+
+        #l[4] is first name of first instructor
+        #l[5] is last names of all instructors
+        #return as primary_instructor (full name)
+        #and other_instructors (last names)
+        if l[4] and l[5]:
+            last_names = l[5].replace(' ','').split(',')
+            section['primary_instructor'] = l[4] + ' ' + last_names[0]
+            if len(last_names) > 1:
+                section['other_instructors'] = ', '.join(last_names[1:])
+            else:
+                section['other_instructors'] = 'N/A'
         else:
-            section['instructor_first_name'] = l[4]
-        if l[5] == '':
-            section['instructor_last_names'] = 'N/A'
-        else:
-            section['instructor_last_names'] = ', '.join(l[5].split(','))
+            section['primary_instructor'] = 'N/A'
+            section['other_instructors'] = 'N/A'
+
         section['building'] = l[6]
-        section['room'] = l[7]
+        section['room'] = section['building'] + ' ' + l[7]
         if l[8] == '':
             section['start_time'] = 'N/A'
         else:
