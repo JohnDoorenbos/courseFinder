@@ -1,11 +1,4 @@
 * Database
-
-**Tables
-
-
-
-
-
 ** Gen eds
 Many-to-many relationship with courses. Some gen eds have extra text (eg 'NWNL when taken with...'); this extra information should be stored in the course as 'Notes'.
 ** Incorporating Spreadsheet with Detailed Info
@@ -47,3 +40,6 @@ Course pages should have a button to add to the list of courses they are interes
 
 *Things to think about
 **incorporating python and javascript
+
+
+ 

@@ -1,0 +1,79 @@
+*Database Outline
+**Tables
+***Catalog Courses
+__tablename__ = courses
+id (PK)
+title
+dept
+number
+prereqs
+hours
+desc
+raw_desc
+same_as
+
+reviews (One to many with reveiws.course_id)
+gen_eds (Many to many with gen_eds.course_id)
+
+
+***Section Courses
+__tablename__ = sections
+id (PK)
+building
+room
+title
+other_instructors
+min_credits
+max_credits
+days
+seven_weeks
+
+start_time (Many to one with section_start_times.sections)
+end_time (Many to one with section_end_times.sections)
+course_id (many to one with courses.sections)
+
+primary_instructor (Many to many with professors.courses)
+
+
+***Review
+__tablename__ = reviews
+review_id (PK)
+stars
+content
+
+course_id (Many to one with courses.reviews)
+
+
+***Gen_ed
+__tablename__ = gen_eds
+gen_ed (PK)
+
+course_id (Many to many with courses.gen_eds. Secondary = gen_eds_course)
+
+
+***Section_Start_Time
+__tablename__ = section_start_times
+time (PK)
+
+section_id (one to many with sections.start_time)
+
+
+***Section_End_Time 
+__tablename__ = section_end_times
+time (PK) 
+
+section_id (one to many with sections.end_time)
+
+
+***Professor
+__tablename__ = professors
+full_name (PK)
+bio
+dept
+
+courses (Many to many with sections.primary_instructor)
+
+***Building
+TBD
+***Room
+TBD
