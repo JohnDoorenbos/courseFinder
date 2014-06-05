@@ -38,7 +38,7 @@ def search( title = None, dept = None, gen_eds = None, prereqs = None, professor
     string = "" 
     for key in params:
         if key == "title":
-            params[key] = params[key].Title()
+            params[key] = params[key].title()
         if params[key] and type(params[key]) is str and key != 'dept':
             string += ".filter(CourseDB."+key+".like('%"+params[key]+"%'))" #Some bugs occuring due to the "like()" function
 
