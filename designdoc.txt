@@ -1,10 +1,65 @@
-* Database
-** Gen eds
-Many-to-many relationship with courses. Some gen eds have extra text (eg 'NWNL when taken with...'); this extra information should be stored in the course as 'Notes'.
+* Database (Model)
+** "courses" Table
+STATUS: DONE
+PRIORITY: N/A
+The online course catalog is in the NorseCourse database, in the "courses" table. This contains the official course description, department, course number, id, credits, if it is the same as another course, if it fulfils any gen eds, and if there are any prerequisites.
+
+*** Source
+STATUS: DONE
+PRIORITY: N/A
+All information for the "courses" table comes from the online course catalog, at "http://www.luther.edu/catalog". The catalog is parsed using Beautiful Soup and regular expressions, in "coursedata.py".
+
+NOTE: The resulting data is returned as a list of dictionaries, each dictionary representing a course. For consistency across the application, specifically with the API, we should consider returning the data as a dictionary where the key is the course id and the value is a dictionary for that course.
+
+*** Management
+STATUS: NOT STARTED
+PRIORITY: MEDIUM
+There is currently no way to get updated information from the course catalog without reinitializing the entire database.
+
+** "reviews" Table
+STATUS: WIP
+PRIORITY: HIGH
+Reviews currently only contain a rating and text. Since we have decided to move away from reviews and towards simply alternate course descriptions, ratings should be removed. Furthermore, information about "up votes", "down votes", whether a review has been flagged as inappropriate, and the date/time the review was submitted should be added. Another consideration is whether a review has been approved, if we choose to only show display reviews after they have been approved. Yet another possibility is to include the IP address of the user who submitted the review, for the possibility of banning IP addresses which abuse the reviews.
+
+*** Source
+STATUS: WIP
+PRIORITY: HIGH
+Reviews are submitted by users online, but submitions are not monitored or in any way restricted. Submittion will also need to be updated to reflect the changes discussed above.
+
+*** Relationships
+STATUS: DONE
+PRIORITY: N/A
+Reviews have a many-to-one relationship with "courses".
+
+*** Management
+STATUS: NOT STARTED
+PRIORITY: MEDIUM
+There are currently no functions to manage reviews. There should be functions to display reviews which have been flagged, have too many downvotes, or have not been approved, and then the ability to set whether or not those reviews should be displayed.
+
+** "gen eds" Table
+STATUS: WIP
+PRIORITY: HIGH
+Currently gen ed fulfillments are a row in the the "courses" table, containing a string representing the list of gen eds a course fulfills. However, it would make sense for "gen eds" to be their own table, with many-to-many relationship with "courses". That would allow easy search for both all the gen eds a course fulfills and all the courses that fulfill a gen ed.
+
+*** Source
+STATUS: DONE
+PRIORITY: N/A
+Has the same source as "courses" above.
+
+NOTE: Currently, the source returns gen eds as a string of gen eds separated by ", ". Another format might prove better for the new gen eds table.
+
+*** Management
+STATUS: NOT STARTED
+PRIORITY: HIGH
+"gen eds" should be updated along with "courses" whenever the latest catalog data is gathered.
+
+* Main Features (Controller)
+* User Interface (View)
+
+* ####################################################################################################
+
 ** Incorporating Spreadsheet with Detailed Info
 Has section name, min credits, max credits, title, faculty first name, faculty last names, buidling, room, start time, end time, days, 7 weeks
-** Database Management
-Creating functions to reset courses, but not reviews.
 
 ** Searching
 ***Title keyword Search is case sensitive
@@ -38,7 +93,7 @@ Course pages should have a button to add to the list of courses they are interes
 ** Accounts?
 
 
-*Things to think about
+* Things to think about
 **incorporating python and javascript
 
 
