@@ -22,7 +22,6 @@ def main():
         prev_percent -= prev_percent % 5
         count += 1
         cur_percent = (count/total*100)
-        #print cur_percent
         cur_percent -= cur_percent % 5
         if cur_percent > prev_percent:
             print str(int(cur_percent))+' %'

@@ -2,9 +2,17 @@ import urllib2, re, bs4
 
 def create_url_list():
     '''Creates the list of urls for each departments course listings'''
-    department_ids = list(range(3890,3941)) + [4215,4229]
-    return ['http://www.luther.edu/catalog/' + str(department_id) + '.htm'
-            for department_id in department_ids]
+    opener = urllib2.build_opener()
+    html_doc = opener.open('http://www.luther.edu/catalog/toc.htm').read()
+    html_soup = bs4.BeautifulSoup(html_doc)
+
+    url_list = []
+
+    for a in html_soup.find_all('a'):
+        if 'Courses' in a.text:
+            url_list.append('http://www.luther.edu/catalog/' + a['href'])
+
+    return url_list
 
 def parse_coursetitle(text,course):
     '''gets the department (ie BIO, CS, etc), course number and title
@@ -178,6 +186,7 @@ def get_course_data():
     cur_course = {}
 
     for url in url_list:
+        #print "requesting",url
         request = urllib2.Request(url)
         html_doc = opener.open(request).read()
         html_soup = bs4.BeautifulSoup(html_doc)
@@ -204,6 +213,7 @@ def get_course_data():
             elif 'coursedescriptions' in p['class'] and not false_course:
                 parse_coursedescriptions(p.text.encode('ascii','ignore'), cur_course)
 
+    
     course_list.append(cur_course) #append final course
 
     course_list = [postprocess_course(course) for course in course_list]
