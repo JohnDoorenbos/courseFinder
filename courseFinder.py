@@ -59,20 +59,17 @@ def keyword_add(d,key):
     else:
         d[key] = 1
 
-def keyword_search(search_string,titles=True,descs=False,reviews=False):
+def keyword_sort(search_string,results):
     keywords = [keyword.lower() for keyword in search_string.split()]
-    results = {}
+    sorted_results = {}
     for w in keywords:
-        for course in dbsession.query(CourseDB).all():
-            if titles and w in course.title.lower():
-                keyword_add(results,course)
-            if descs and w in course.desc.lower():
-                keyword_add(results,course)
-            if reviews:
-                pass
-                #no review searching yet
+        for course in results:#dbsession.query(CourseDB).all():
+            if w in course.title.lower():
+                keyword_add(sorted_results,course)
+            if w in course.desc.lower():
+                keyword_add(sorted_results,course)
     
-    return sorted(results, key = lambda k: results[k], reverse=True)
+    return list(sorted(sorted_results, key = lambda k: sorted_results[k], reverse=True))
 
 #------------------------------------------------------------------------#
 
@@ -88,6 +85,10 @@ def results_page(methods=['POST','GET']):
     course_query_form = CourseQueryForm().remove_csrf()
     result = results_page_search(dbsession,request)
     
+    if request.args['title']:
+        print request.args['title']
+        return render_template("results.html",courses = keyword_sort(request.args['title'],result), history = history)
+
     return render_template("results.html", courses = sorted(list(result), key = lambda c: c.id), history = history)
 
 @app.route('/catalog')
