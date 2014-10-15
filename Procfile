@@ -1,1 +1,1 @@
-web: gunicorn courseFinder:app
+web: gunicorn norsecourse:app

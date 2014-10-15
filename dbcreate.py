@@ -1,5 +1,6 @@
 from config import *
 from coursedata import get_course_data
+
 def main():
     print 'Getting data from internet'
     course_data = get_course_data()

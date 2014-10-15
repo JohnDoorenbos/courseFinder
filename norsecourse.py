@@ -1,5 +1,5 @@
 from config import *
-from dbSearch import *
+from dbsearch import *
 from forms import CourseQueryForm, ReviewForm
 import re, random
 
