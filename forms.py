@@ -8,7 +8,7 @@ class CustomForm(Form):
 
 class CourseQueryForm(CustomForm):
     dept = TextField('Department', id="dept")
-    title = TextField('Keywords', id="title")
+    keywords = TextField('Keywords', id="keywords")
     gen_eds = SelectMultipleField('Gen Ed Fulfillments',
                                   choices=[('',''),
                                            ('BL','BL'),

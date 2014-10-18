@@ -1,78 +1,12 @@
 from config import *
 from dbsearch import *
+
+from dbmisc import get_depts, next_review_id
+from stringhelp import listify, id_to_url, id_from_url
+
 from forms import CourseQueryForm, ReviewForm
-import re, random
 
 dbsession = loadSession()
-
-#---------------------------Helper Functions-------------------------------#
-
-def listify(s):
-    if s == 'N/A':
-        return []
-    else:
-        return [i.strip() for i in s.split(',')]
-
-def id_from_url(course_id):
-    '''takes an id like 'cs200' and return 'CS 200'
-    mostly used for preparing ids from urls to be used in the database'''
-    match = re.match('^([A-Z]+)(\d{3}(-\d{3})*.?)$',course_id.upper())
-    if match:
-        dept = str(match.group(1))
-        number = str(match.group(2)).replace('-',', ')
-        return dept + ' ' + number
-    else:
-        raise(ValueError,'\''+course_id+'\' is not a valid course id')
-
-
-def id_to_url(course_id):
-    return str(course_id.replace(', ','-').remove(' '))
-
-def get_depts():
-    res = dbsession.query(CourseDB)
-
-    dept_list = []
-    for course in res:
-        if course.dept not in dept_list:
-            dept_list.append(course.dept)
-
-    return dept_list
-
-def get_review_ids():
-    res = dbsession.query(ReviewDB)
-    review_id_list = [review.review_id for review in res]
-    return review_id_list
-
-def next_review_id():
-    review_id_list = sorted(get_review_ids())
-    if 0 not in review_id_list:
-        return 0
-    else:
-        for review_id in review_id_list:
-            new_id = review_id + 1
-            if new_id not in review_id_list:
-                return new_id
-
-def keyword_add(d,key):
-    if key in d:
-        d[key] += 1
-    else:
-        d[key] = 1
-
-def keyword_sort(search_string,results):
-    keywords = [keyword.lower() for keyword in search_string.split()]
-    sorted_results = {}
-    for w in keywords:
-        for course in results:#dbsession.query(CourseDB).all():
-            if w in course.title.lower():
-                keyword_add(sorted_results,course)
-            if w in course.desc.lower():
-                keyword_add(sorted_results,course)
-    
-    return list(sorted(sorted_results, key = lambda k: sorted_results[k], reverse=True))
-
-#------------------------------------------------------------------------#
-
 
 @app.route('/coursefinder')
 def main_page():
@@ -83,17 +17,15 @@ def main_page():
 @app.route("/coursefinder/results")
 def results_page(methods=['POST','GET']):
     course_query_form = CourseQueryForm().remove_csrf()
-    result = results_page_search(dbsession,request)
-    
-    if request.args['title']:
-        print request.args['title']
-        return render_template("results.html",courses = keyword_sort(request.args['title'],result), history = history)
-
-    return render_template("results.html", courses = sorted(list(result), key = lambda c: c.id), history = history)
+    result = search_preprocess(dbsession,request.args)
+    print type(result)
+    return render_template("results.html",
+                           courses = result,
+                           history = history)
 
 @app.route('/catalog')
 def catalog():
-    dept_list = sorted(get_depts())
+    dept_list = sorted(get_depts(dbsession))
     return render_template('catalog.html',depts=dept_list, history=history)
 
 @app.route('/catalog/<dept>')
@@ -143,18 +75,19 @@ def submit_review(dept, course_id, methods=['POST','GET']):
     form = ReviewForm(request.args).remove_csrf()
     if form.validate():
         print 'form validated'
-        review = Review(next_review_id(),form.stars.data,form.content.data,str(formatted_id))
+        review = Review(next_review_id(dbsession),form.stars.data,form.content.data,str(formatted_id))
         db.session.add(review)
         db.session.commit()
         flash('Thanks for submitting a review')
     return redirect('/catalog/'+dept+"/"+course_id)
+
 @app.route('/about')
 def about_page():
     return render_template('about.html', history = history)
 
 @app.route('/api')
 def api(methods=['POST','GET']):
-    data = api_search(dbsession,request)
+    data = search_preprocess(dbsession,request.args)
     return jsonify(**data)
 
 @app.route('/api/docs')

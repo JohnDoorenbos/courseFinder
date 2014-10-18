@@ -2,12 +2,18 @@ from config import *
 
 from sqlalchemy import create_engine, MetaData, Table
 from sqlalchemy.orm import mapper, sessionmaker
+
+import json
+from collections import OrderedDict
+from stringhelp import listify
  
 class CourseDB(object):
     pass
 class ReviewDB(object):
     pass
+
 #----------------------------------------------------------------------
+
 def loadSession():
     """This function generates a session, with which you can make queries to the database."""    
     
@@ -25,110 +31,115 @@ def loadSession():
     session = Session()
     return session
 
-
-       
-def search( title = None, dept = None, gen_eds = None, prereqs = None, professors = None, id = None, ses = None):
-    '''This method essentially employs the accumlutator method to create a string that looks like an sqlAlchemy query. The string is evaluated in return statement, and a list of DB entries that match the query is returned'''
-    temp = locals() #makes a dictionary of all of the parameters
-    params = dict(temp) # creates a new dictionary of parameters, this one doesn't change as you add new locals.
-    if dept:
-        res = ses.filter(CourseDB.dept == dept.upper())
+def search_preprocess(session,args):
+    if 'dept' in args:
+        dept = args['dept'].upper()
     else:
-        res = ses
-    string = "" 
-    for key in params:
-        if key == "title":
-            pass #ignore titles for now -- they are handled by keyword_sort
-            #params[key] = params[key].title()
-        elif params[key] and type(params[key]) is str and key != 'dept':
-            string += ".filter(CourseDB."+key+".like('%"+params[key]+"%'))" #Some bugs occuring due to the "like()" function
+        dept = None
 
-    result ="res" + string + ".all()"
-    
-    print("SEARCH QUERY: "+ eval('result')) #Prints final sqlAlchemy query
-    print("")
-    
-    return eval(result) #Evaluates that query.
+    if 'keywords' in args:
+        keywords = args['keywords'].lower().split()
+    else:
+        keywords = []
 
+    if 'gen_eds' in args:
+        gen_eds = listify(args['gen_eds'])
+    else:
+        gen_eds = []
 
-def results_page_search(dbsession,request):
-    res = dbsession.query(CourseDB)
-    gen_eds_list = request.args.getlist("gen_eds")
-    print(gen_eds_list, "wow!")
-    search_string = "search("
-    for i in request.args:
-        if i != "gen_eds":
-            search_string += i+"="+"'"+request.args[i]+"'"+", "
+    if len(keywords):
+        sort = 'keyword'
+    else:
+        sort = 'alpha'
 
-    new_search_string = ""
-    to_become_set = []
-    if len(gen_eds_list) == 0:
-        search_string += "ses = res)"
-        to_become_set = eval(search_string)
-    for gen_ed in gen_eds_list:
-        new_search_string = str(search_string+"gen_eds = "+"'"+gen_ed+"'" + ", ses = res)")
-        temp = eval(new_search_string)
-        print(new_search_string, "WHAT IS GOING ON...?")
-        print(temp)
-        to_become_set += temp
-    
-    result = set(to_become_set)
-    print("")
-#    print(result)
-    return sorted(list(result))
+    return search(session = session,
+                  dept = dept,
+                  keywords = keywords,
+                  gen_eds = gen_eds,
+                  sort = sort)
 
-def api_search(dbsession,request):
-    res = dbsession.query(CourseDB)
-    gen_eds_list = request.args.getlist("gen_eds")
-    
-    search_string = "search("
-    for i in request.args:
-        if i != "gen_eds":
-            search_string += i+"="+"'"+request.args[i]+"'"+", "
+def search(session,dept=None, keywords=[], gen_eds=[], sort=None):
+    res = session.query(CourseDB)
 
-    new_search_string = ""
-    to_become_set = []
-    if len(gen_eds_list) == 0:
-        search_string += "ses = res)"
-        to_become_set = eval(search_string)
-    for gen_ed in gen_eds_list:
-        new_search_string = str(search_string+"gen_eds = "+"'"+gen_ed+"'" + ", ses = res)")
-        temp = eval(new_search_string)
-        print(new_search_string, "WHAT IS GOING ON...?")
-        print(temp)
-        to_become_set += temp #this gets us our combination of lists. 
-    to_become_dict =list(set(to_become_set))
-    result = {}
-    for course in to_become_dict:
-        result[course.id] = {'title':course.title, 'number':course.number, 'id':course.id, 'dept':course.id, 'desc':course.desc, 'same_as':course.same_as, 'gen_eds':course.gen_eds, 'hours':course.hours}#, 'professors':course.professors}
-   
-    
+    if dept:
+        res = res.filter(CourseDB.dept == dept)
 
-    return result
-    
-    
+    if gen_eds:
+        new_res = None
+        for gen_ed in gen_eds:
+            only_str = gen_ed
+            first_str = gen_ed + ',%' #this gen_ed starts list
+            mid_str = '% ' + gen_ed + ',%' #in middle of lsit
+            last_str = '% ' + gen_ed #at end of list
+            gen_ed_only = res.filter(CourseDB.gen_eds.like(only_str))
+            gen_ed_first = res.filter(CourseDB.gen_eds.like(first_str))
+            gen_ed_mid = res.filter(CourseDB.gen_eds.like(mid_str))
+            gen_ed_last = res.filter(CourseDB.gen_eds.like(last_str))
+            temp_res = gen_ed_only.\
+                       union(gen_ed_first).\
+                       union(gen_ed_mid).\
+                       union(gen_ed_last)
+            if new_res: #new_res exists, so combine with temp_res
+                new_res = temp_res.union(new_res)
+            else: #new_res is None, so make new_res temp_res
+                new_res = temp_res
+        res = new_res
+
+    result_dict = {}
+    for course in res:
+        result_dict[course.id] = {'id':course.id,
+                          'number':course.number,
+                          'dept':course.dept,
+                          'hours':course.hours,
+                          'title':course.title,
+                          'desc':course.desc,
+                          'same_as':course.same_as,
+                          'prereqs':course.prereqs,
+                          'gen_eds':course.gen_eds}
+
+    for course in result_dict:
+        count = 0
+        for word in keywords:
+            count += result_dict[course]['title'].lower().count(word)
+            count += result_dict[course]['desc'].lower().count(word)
+        result_dict[course]['keyword_count'] = count
+
+        gen_ed_list = listify(result_dict[course]['gen_eds'])
+        result_dict[course]['gen_ed_count'] = len(gen_ed_list)
+        count = 0
+        for gen_ed in gen_eds:
+            if gen_ed in gen_ed_list:
+                count += 1
+        result_dict[course]['searched_gen_ed_count'] = count
+
+    if keywords:
+        for course_id in result_dict.keys():
+            if result_dict[course_id]['keyword_count'] == 0:
+                del result_dict[course_id]
+
+    if sort:
+        if sort == 'alpha':
+            sorted_keys = sorted(result_dict)
+
+        elif sort == 'keyword':
+            sorted_keys = sorted(result_dict,
+                                 key = lambda k: result_dict[k]['keyword_count'],
+                                 reverse=True)
+
+        sorted_results = OrderedDict()
+        for course_id in sorted_keys:
+            sorted_results[course_id] = result_dict[course_id]
+
+        return sorted_results
+
+    else:
+        return result_dict
 
 #----------------------------------------------------------------------
-
-
  
 if __name__ == "__main__":
-    
     session = loadSession()
-    
-    #res = session.query(CourseDB.title, CourseDB.gen_eds, CourseDB.dept)
-    
-    res = session.query(CourseDB.title) #Note: In the end, we'll want the query so simply return the class.
-    print("")
-    print("")
-#    print(search(title = "", dept = "", gen_eds = "", prereqs = "",  ses = res))
-    print("")
-    print("")
-    print(search(dept = "CSSSS", ses = res))
-    print("")
-    print("")
- #   print(search(id = "MATH 110", ses = res)) 
+    result = search(session,keywords=['plato','aristotle','homer','classical','hellenic','roman republic','rome','athens'],sort='keyword')
 
-
-    
-    
+    for course_id in result:
+        print course_id,result[course_id]['keyword_count']
