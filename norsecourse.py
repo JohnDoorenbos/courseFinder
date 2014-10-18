@@ -33,7 +33,8 @@ def dept_page(dept):
     dept = dept.upper()
 
     res = dbsession.query(CourseDB)
-    course_list = res.filter(CourseDB.dept == dept)
+    course_list = list(res.filter(CourseDB.dept == dept))
+    course_list.sort(key = lambda c: c.id)
 
     return render_template('dept.html',dept=dept,courses=course_list,history=history)
 
