@@ -46,29 +46,44 @@ def search_preprocess(session,args):
         gen_eds = listify(args['gen_eds'])
     else:
         gen_eds = []
+    auto_add_overqualifying(gen_eds,args)
 
     if len(keywords):
         sort = 'keyword'
     else:
         sort = 'alpha'
 
-    if 'overqualifying_gen_eds' in args:
-        overqualifying_gen_eds = eval(args['overqualifying_gen_eds'])
-    else:
-        overqualifying_gen_eds = True
-    if overqualifying_gen_eds:
-        if 'HBSSM' not in gen_eds and 'HB' in gen_eds:
-            gen_eds.append('HBSSM')
-        if 'HEPT' not in gen_eds and 'HE' in gen_eds:
-            gen_eds.append('HEPT')
-        if 'NWL' not in gen_eds and 'NWNL' in gen_eds:
-            gen_eds.append('NWL')
-
     return search(session = session,
                   dept = dept,
                   keywords = keywords,
                   gen_eds = gen_eds,
                   sort = sort)
+
+def auto_add_overqualifying(gen_eds,args={}):
+    if 'auto_hbssm' in args:
+        auto_hbssm = eval(args['auto_hbssm'])
+    else:
+        auto_hbssm = True
+
+    if 'auto_hept' in args:
+        auto_hept = eval(args['auto_hept'])
+    else:
+        auto_hept = True
+
+    if 'auto_nwl' in args:
+        auto_nwl = eval(args['auto_nwl'])
+    else:
+        auto_nwl = False
+
+    if auto_hbssm:
+        if 'HBSSM' not in gen_eds and 'HB' in gen_eds:
+            gen_eds.append('HBSSM')
+    if auto_hept:
+        if 'HEPT' not in gen_eds and 'HE' in gen_eds:
+            gen_eds.append('HEPT')
+    if auto_nwl:
+        if 'NWL' not in gen_eds and 'NWNL' in gen_eds:
+            gen_eds.append('NWL')
 
 def search(session,dept=None, keywords=[], gen_eds=[], sort=None):
     res = session.query(CourseDB)
