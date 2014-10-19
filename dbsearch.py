@@ -52,6 +52,18 @@ def search_preprocess(session,args):
     else:
         sort = 'alpha'
 
+    if 'overqualifying_gen_eds' in args:
+        overqualifying_gen_eds = eval(args['overqualifying_gen_eds'])
+    else:
+        overqualifying_gen_eds = True
+    if overqualifying_gen_eds:
+        if 'HBSSM' not in gen_eds and 'HB' in gen_eds:
+            gen_eds.append('HBSSM')
+        if 'HEPT' not in gen_eds and 'HE' in gen_eds:
+            gen_eds.append('HEPT')
+        if 'NWL' not in gen_eds and 'NWNL' in gen_eds:
+            gen_eds.append('NWL')
+
     return search(session = session,
                   dept = dept,
                   keywords = keywords,
@@ -139,7 +151,7 @@ def search(session,dept=None, keywords=[], gen_eds=[], sort=None):
  
 if __name__ == "__main__":
     session = loadSession()
-    result = search(session,keywords=['plato','aristotle','homer','classical','hellenic','roman republic','rome','athens'],sort='keyword')
+    result = search(session,keywords=['plato','aristotle','homer','classical','hellenic','roman republic','rome','athens', 'roman', 'greek','greece'],sort='keyword')
 
     for course_id in result:
         print course_id,result[course_id]['keyword_count']
