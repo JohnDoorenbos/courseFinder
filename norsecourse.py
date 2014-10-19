@@ -17,11 +17,14 @@ def main_page():
 @app.route("/coursefinder/results")
 def results_page(methods=['POST','GET']):
     course_query_form = CourseQueryForm().remove_csrf()
-    result = search_preprocess(dbsession,request.args)
-    print type(result)
-    return render_template("results.html",
-                           courses = result,
-                           history = history)
+    results = search_preprocess(dbsession,request.args)
+    if len(results):
+        return render_template("results.html",
+                               courses = results,
+                               history = history)
+    else:
+        return render_template("no_results.html",
+                               history = history)
 
 @app.route('/catalog')
 def catalog():
