@@ -44,7 +44,8 @@ def preprocess_args(args):
 
     if 'gen_eds' in args:
         gen_eds = args.getlist('gen_eds')
-        gen_eds.remove('') #if nothing is entered in the form, gen_eds is [u''], which returns no results. This fixes that
+        if '' in gen_eds:
+            gen_eds.remove('') #if nothing is entered in the form, gen_eds is [u''], which returns no results. This fixes that
 
     else:
         gen_eds = []
