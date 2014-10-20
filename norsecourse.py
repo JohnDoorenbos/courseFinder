@@ -17,7 +17,8 @@ def main_page():
 @app.route("/coursefinder/results")
 def results_page(methods=['POST','GET']):
     course_query_form = CourseQueryForm().remove_csrf()
-    results = search_preprocess(dbsession,request.args)
+    args = preprocess_args(request.args)
+    results = search(dbsession,**args)
     if len(results):
         return render_template("results.html",
                                courses = results,
@@ -91,7 +92,8 @@ def about_page():
 
 @app.route('/api')
 def api(methods=['POST','GET']):
-    data = search_preprocess(dbsession,request.args)
+    args = preprocess_args(request.args)
+    data = search(dbsession,**args)
     return jsonify(**data)
 
 @app.route('/api/docs')

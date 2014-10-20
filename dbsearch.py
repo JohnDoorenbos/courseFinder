@@ -31,7 +31,7 @@ def loadSession():
     session = Session()
     return session
 
-def search_preprocess(session,args):
+def preprocess_args(args):
     if 'dept' in args:
         dept = args['dept'].upper()
     else:
@@ -43,7 +43,9 @@ def search_preprocess(session,args):
         keywords = []
 
     if 'gen_eds' in args:
-        gen_eds = listify(args['gen_eds'])
+        gen_eds = args.getlist('gen_eds')
+        gen_eds.remove('') #if nothing is entered in the form, gen_eds is [u''], which returns no results. This fixes that
+
     else:
         gen_eds = []
     auto_add_overqualifying(gen_eds,args)
@@ -53,11 +55,10 @@ def search_preprocess(session,args):
     else:
         sort = 'alpha'
 
-    return search(session = session,
-                  dept = dept,
-                  keywords = keywords,
-                  gen_eds = gen_eds,
-                  sort = sort)
+    return {'dept':dept,
+            'keywords':keywords,
+            'gen_eds':gen_eds,
+            'sort':sort}
 
 def auto_add_overqualifying(gen_eds,args={}):
     if 'auto_hbssm' in args:
