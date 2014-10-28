@@ -25,6 +25,12 @@ h2 {
 }
 
 p {}
+.results p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 form {}
 
 .course_list {}
@@ -44,20 +50,9 @@ form {}
 .course_list .course {
     height: 50px;
 }
-
-.results .course_title {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 .course_title {}
 .course_hours {}
-.course_details {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+.course_details {}
 
 .dept_list {}
 .dept {
