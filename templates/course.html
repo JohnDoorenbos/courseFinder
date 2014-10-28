@@ -29,11 +29,12 @@
   
 </div>
 
-<h2>Reviews</h1>
+{% if reviews|length %}
+<h2>User-Submitted Descriptions</h1>
 <div class="review_list">
+  <br>
   {% for review in reviews %}
   <div class="review">
-    <p>Rating: {{review.stars}}</p>
     <p>{{review.content}}</p>
     {% if review != reviews|last() %}
     <hr/>
@@ -41,8 +42,9 @@
   </div>
   {% endfor %}
 </div>
+{% endif %}
 
-<h2>Submit Review</h1>
+<h2>Submit Alternative Description</h1>
 <form method="GET", action="/catalog/{{course.dept}}/{{id_to_url(course.id)}}/submit">
   {% for field in form %}
   {{ render_field(field) }}

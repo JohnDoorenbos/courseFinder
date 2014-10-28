@@ -25,8 +25,7 @@ class CourseQueryForm(CustomForm):
                                            ('Skl','Skl'),
                                            ('Wel','Wel')], id="gen_eds")
 
-class ReviewForm(CustomForm):
-    stars = IntegerField('Rating (1-5)', [validators.DataRequired(),
-                                          validators.NumberRange(1,5)],
-                         id="stars")
-    content = TextAreaField('Content',id="content")
+class AlternativeDescriptionForm(CustomForm):
+    content = TextAreaField('Content',
+                            [validators.DataRequired()],
+                            id="content")
