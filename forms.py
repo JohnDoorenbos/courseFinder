@@ -1,10 +1,10 @@
 from config import *
 
 class CustomForm(Form):
-    def remove_csrf(self):
+    def __init__(self,*args):
+        super(CustomForm,self).__init__(*args)
         self.__delitem__('csrf_token')
         self.csrf_enabled = False
-        return self
 
 class CourseQueryForm(CustomForm):
     dept = TextField('Department', id="dept")

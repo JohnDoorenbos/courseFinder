@@ -12,12 +12,12 @@ dbsession = loadSession()
 @app.route('/coursefinder')
 def main_page():
     print request.method
-    form = CourseQueryForm().remove_csrf()
+    form = CourseQueryForm()
     return render_template('form.html', form=form, history=history)
 
 @app.route("/coursefinder/results")
 def results_page(methods=['POST','GET']):
-    course_query_form = CourseQueryForm().remove_csrf()
+    course_query_form = CourseQueryForm()
     args = preprocess_args(request.args)
     results = search(dbsession,**args)
     if len(results):
@@ -68,7 +68,7 @@ def course_page(dept, course_id):
         additional_reviews = dbsession.query(ReviewDB).filter(ReviewDB.course_id == same_course)
         review_list += list(additional_reviews)
 
-    form = AltDescForm().remove_csrf()
+    form = AltDescForm()
         
     #Appends course title to history
     history.add(result)
@@ -78,7 +78,7 @@ def course_page(dept, course_id):
 @app.route('/catalog/<dept>/<course_id>/submit')
 def submit_review(dept, course_id, methods=['POST','GET']):
     formatted_id = id_from_url(course_id)
-    form = AltDescForm(request.args).remove_csrf()
+    form = AltDescForm(request.args)
     if form.validate():
         print 'form validated'
         review = Review(next_review_id(dbsession),0,form.content.data,str(formatted_id))
