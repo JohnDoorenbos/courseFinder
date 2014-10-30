@@ -1,4 +1,5 @@
 from config import *
+from dbmodels import Course, Review
 from dbsearch import *
 
 from dbmisc import get_depts, next_review_id

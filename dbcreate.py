@@ -1,4 +1,5 @@
 from config import *
+from dbmodels import Course, Review
 from coursedata import get_course_data
 
 def main():

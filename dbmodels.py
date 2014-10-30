@@ -5,7 +5,6 @@ course_offerings = db.Table('course_offerings',
                             db.Column('prof_name',db.Text, db.ForeignKey('professors.name'))
 )
 
-
 class Course(db.Model):
     __tablename__ = "courses"
     title = db.Column(db.Text)
@@ -18,6 +17,7 @@ class Course(db.Model):
     id = db.Column(db.Text, primary_key = True)
     professors = db.relationship("Professor",secondary = course_offerings)
     same_as = db.Column(db.Text)
+    reviews = db.relationship("Review")
     def __init__(self, title, dept, number, desc, gen_eds, prereqs, id, professors, hours, same_as):
         self.title = title
         self.dept = dept
@@ -29,7 +29,22 @@ class Course(db.Model):
         self.id = id
         self.professors = professors
         self.same_as = same_as
-    
+    def __str__(self):
+        return(self.title +" " + self.id + " " + self.gen_eds)
+
+class Review(db.Model):
+    __tablename__ = "reviews"
+    review_id = db.Column(db.Integer, primary_key = True)
+    stars = db.Column(db.Integer)
+    content = db.Column(db.Text)
+    course_id = db.Column(db.Text, db.ForeignKey('courses.id'))
+
+    def __init__(self, review_id, stars, content, course_id):
+        self.review_id = review_id
+        self.stars = stars
+        self.content = content
+        self.course_id = course_id
+
 class Professor(db.Model):
     __tablename__ = "professors"
     name =  db.Column(db.Text, primary_key = True)
