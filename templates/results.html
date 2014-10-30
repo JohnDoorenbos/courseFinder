@@ -11,7 +11,7 @@
   {% for id in courses %}
   {% with link = "/catalog/"+courses[id].dept+"/"+id_to_url(id) %}
 
-  <div class="col-md-6 col-lg-4 course">
+  <div class="col-sm-6 col-md-4 course">
     <h2 class="course_title" title="{{courses[id].title}}">
       <a href={{link}}>{{id}}:</a>
     </h2>
