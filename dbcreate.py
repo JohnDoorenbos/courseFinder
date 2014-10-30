@@ -1,10 +1,10 @@
 from config import *
-from dbmodels import Course, Review
+from dbmodels import Course, AltDesc
 from coursedata import get_course_data
 
 def main():
     print 'Getting data from internet'
-    course_data = get_course_data()
+    course_data = get_course_data(quiet=False)
     print 'Data collected'
     
     db.drop_all()
@@ -13,7 +13,7 @@ def main():
     count = 0
     total = float(len(course_data))
     prev_percent = -5
-    print 'Creating database\n0 %'
+    print 'Creating database'
     #make the db
 
     for course in course_data:

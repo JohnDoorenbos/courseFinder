@@ -20,5 +20,5 @@ def id_from_url(course_id):
 
 def id_to_url(course_id):
     '''takes an id like 'CS 200' and returns 'cs200'
-    for reviews from the database to be used in a url'''
+    for alt descs from the database to be used in a url'''
     return str(course_id.replace(', ','-').remove(' '))

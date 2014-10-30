@@ -29,14 +29,14 @@
   
 </div>
 
-{% if reviews|length %}
+{% if alt_descs|length %}
 <h2>User-Submitted Descriptions</h1>
-<div class="review_list">
+<div class="alt_desc_list">
   <br>
-  {% for review in reviews %}
-  <div class="review">
-    <p>{{review.content}}</p>
-    {% if review != reviews|last() %}
+  {% for alt_desc in alt_descs %}
+  <div class="alt_desc">
+    <p>{{alt_desc.content}}</p>
+    {% if alt_desc != alt_descs|last() %}
     <hr/>
     {% endif %}
   </div>

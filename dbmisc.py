@@ -1,4 +1,4 @@
-from dbsearch import CourseDB, ReviewDB
+from dbsearch import CourseDB, AltDescDB
 
 def get_depts(session):
     res = session.query(CourseDB)
@@ -10,17 +10,17 @@ def get_depts(session):
 
     return dept_list
 
-def get_review_ids(session):
-    res = session.query(ReviewDB)
-    review_id_list = [review.review_id for review in res]
-    return review_id_list
+def get_alt_desc_ids(session):
+    res = session.query(AltDescDB)
+    alt_desc_id_list = [alt_desc.alt_desc_id for alt_desc in res]
+    return alt_desc_id_list
 
-def next_review_id(session):
-    review_id_list = sorted(get_review_ids(session))
-    if 0 not in review_id_list:
+def next_alt_desc_id(session):
+    alt_desc_id_list = sorted(get_alt_desc_ids(session))
+    if 0 not in alt_desc_id_list:
         return 0
     else:
-        for review_id in review_id_list:
-            new_id = review_id + 1
-            if new_id not in review_id_list:
+        for alt_desc_id in alt_desc_id_list:
+            new_id = alt_desc_id + 1
+            if new_id not in alt_desc_id_list:
                 return new_id

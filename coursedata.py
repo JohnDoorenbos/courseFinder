@@ -175,7 +175,7 @@ def postprocess_course(course):
 
     return course
 
-def get_course_data():
+def get_course_data(quiet=True):
     '''gets the latest course data from luther catalog,
     which it returns as a list of dictionaries'''
 
@@ -186,7 +186,8 @@ def get_course_data():
     cur_course = {}
 
     for url in url_list:
-        #print "requesting",url
+        if not quiet:
+            print "Requesting page " + str(url_list.index(url)+1) + " of " +str(len(url_list))
         request = urllib2.Request(url)
         html_doc = opener.open(request).read()
         html_soup = bs4.BeautifulSoup(html_doc)

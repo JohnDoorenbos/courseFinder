@@ -9,7 +9,7 @@ from stringhelp import listify
  
 class CourseDB(object):
     pass
-class ReviewDB(object):
+class AltDescDB(object):
     pass
 
 #----------------------------------------------------------------------
@@ -24,8 +24,8 @@ def loadSession():
     courses = Table('courses', metadata, autoload=True)
     mapper(CourseDB, courses)
  
-    reviews = Table('reviews',metadata, autoload=True)
-    mapper(ReviewDB, reviews)
+    alt_descs = Table('alt_descs',metadata, autoload=True)
+    mapper(AltDescDB, alt_descs)
     
     Session = sessionmaker(bind=engine)
     session = Session()

@@ -1,8 +1,8 @@
 from config import *
-from dbmodels import Course, Review
+from dbmodels import Course, AltDesc
 from dbsearch import *
 
-from dbmisc import get_depts, next_review_id
+from dbmisc import get_depts, next_alt_desc_id
 from stringhelp import listify, id_to_url, id_from_url
 
 from forms import CourseQueryForm, AltDescForm
@@ -56,33 +56,33 @@ def course_page(dept, course_id):
     except:
         return 'Course \'' + course_id + '\' does not exist.'
 
-    #get reviews for course
-    res = dbsession.query(ReviewDB)
-    review_list = list(res.filter(ReviewDB.course_id == formatted_id))
+    #get alt descs for course
+    res = dbsession.query(AltDescDB)
+    alt_desc_list = list(res.filter(AltDescDB.course_id == formatted_id))
 
-    #get reviews for courses that are the same (like CS220 and MATH220)
+    #get alt descs for courses that are the same (like CS220 and MATH220)
     #and concatenate them together
     res = dbsession.query(CourseDB)
     course = res.filter(CourseDB.id == formatted_id).one()
     for same_course in listify(course.same_as):
-        additional_reviews = dbsession.query(ReviewDB).filter(ReviewDB.course_id == same_course)
-        review_list += list(additional_reviews)
+        additional_alt_descs = dbsession.query(AltDescDB).filter(AltDescDB.course_id == same_course)
+        alt_desc_list += list(additional_alt_descs)
 
     form = AltDescForm()
         
     #Appends course title to history
     history.add(result)
 
-    return render_template("course.html", course=result, form=form, history = history, reviews=review_list)
+    return render_template("course.html", course=result, form=form, history = history, alt_descs=alt_desc_list)
 
 @app.route('/catalog/<dept>/<course_id>/submit')
-def submit_review(dept, course_id, methods=['POST','GET']):
+def submit_alt_desc(dept, course_id, methods=['POST','GET']):
     formatted_id = id_from_url(course_id)
     form = AltDescForm(request.args)
     if form.validate():
         print 'form validated'
-        review = Review(next_review_id(dbsession),0,form.content.data,str(formatted_id))
-        db.session.add(review)
+        alt_desc = AltDesc(next_alt_desc_id(dbsession),form.content.data,str(formatted_id))
+        db.session.add(alt_desc)
         db.session.commit()
         flash('Thanks for submitting an alternative description')
     return redirect('/catalog/'+dept+"/"+course_id)

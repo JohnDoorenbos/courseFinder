@@ -17,7 +17,7 @@ class Course(db.Model):
     id = db.Column(db.Text, primary_key = True)
     professors = db.relationship("Professor",secondary = course_offerings)
     same_as = db.Column(db.Text)
-    reviews = db.relationship("Review")
+    alt_descs = db.relationship("AltDesc")
     def __init__(self, title, dept, number, desc, gen_eds, prereqs, id, professors, hours, same_as):
         self.title = title
         self.dept = dept
@@ -32,16 +32,14 @@ class Course(db.Model):
     def __str__(self):
         return(self.title +" " + self.id + " " + self.gen_eds)
 
-class Review(db.Model):
-    __tablename__ = "reviews"
-    review_id = db.Column(db.Integer, primary_key = True)
-    stars = db.Column(db.Integer)
+class AltDesc(db.Model):
+    __tablename__ = "alt_descs"
+    alt_desc_id = db.Column(db.Integer, primary_key = True)
     content = db.Column(db.Text)
     course_id = db.Column(db.Text, db.ForeignKey('courses.id'))
 
-    def __init__(self, review_id, stars, content, course_id):
-        self.review_id = review_id
-        self.stars = stars
+    def __init__(self, alt_desc_id, content, course_id):
+        self.alt_desc_id = alt_desc_id
         self.content = content
         self.course_id = course_id
 
