@@ -4,12 +4,27 @@
 
 {% block content %}
 {{ super() }}
-    <p class="lead">Explore the Luther College course catalog! Search by department, keywords, and general education fulfillments. Read official course descriptions or those submitted by other students, then offer your own!</p>
-<form class="form form-vertical" method="GET" action="/coursefinder/results">  
+<p class="lead">Explore the Luther College course catalog! Search by department, keywords, and general education fulfillments. Read official course descriptions or those submitted by other students, then offer your own!</p>
+
+<form class="box form-vertical col-md-4" method="GET" action="/coursefinder/results">
+  <h2>Search</h2>
   {% for field in form %}
-    {{render_field(field)}}
+  {{render_field(field)}}
   {% endfor %}
-  <input type="submit" value="Search"/>
+  <input type="submit" value="Submit"/>
+  <br>
+  <br>
 </form>
+
+<div id="tips" class="box col-md-8">
+  <h2>Searching Tips</h2>
+  
+  <p> <strong>Department:</strong> Currently you can only search for a single departments. Leaving it blank searches all departments. Departments should be searched by their abreviated forms (i.e. "BIO" not "biology"). This is not case sensitive. For a full list of abreviations, see the <a href="/catalog">catalog</a>.</p>
+
+  <p> <strong>Keywords:</strong> This checks for keywords in the course title and official description. If you are having trouble getting results with this, try putting in related forms and related terms. For example, if "Rome" isn't returning many results, try also typing "Roman," "republic," and "empire". As a general rule, enter the singular version of a noun instead of the plural. If keywords is not blank, the results are sorted by relavence instead of alphabetically. Any course that matched at least one keyword is returned.</p>
+
+  <p> <strong>Gen eds:</strong> This limits the results by what general education requirement they fulfill. If this field is not blank, it returns only courses that fulfill at least one gen ed, sorted alphabetically. If you are having difficulty selecting more than one gen ed, try holding <code>Ctrl</code> and clicking.</p>
+
+</div>
 
 {% endblock %}
