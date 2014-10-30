@@ -30,6 +30,11 @@ p {}
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.course_list p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 form {}
 
