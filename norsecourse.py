@@ -5,7 +5,7 @@ from dbsearch import *
 from dbmisc import get_depts, next_review_id
 from stringhelp import listify, id_to_url, id_from_url
 
-from forms import CourseQueryForm, AlternativeDescriptionForm
+from forms import CourseQueryForm, AltDescForm
 
 dbsession = loadSession()
 
@@ -68,7 +68,7 @@ def course_page(dept, course_id):
         additional_reviews = dbsession.query(ReviewDB).filter(ReviewDB.course_id == same_course)
         review_list += list(additional_reviews)
 
-    form = AlternativeDescriptionForm().remove_csrf()
+    form = AltDescForm().remove_csrf()
         
     #Appends course title to history
     history.add(result)
@@ -78,13 +78,13 @@ def course_page(dept, course_id):
 @app.route('/catalog/<dept>/<course_id>/submit')
 def submit_review(dept, course_id, methods=['POST','GET']):
     formatted_id = id_from_url(course_id)
-    form = AlternativeDescriptionForm(request.args).remove_csrf()
+    form = AltDescForm(request.args).remove_csrf()
     if form.validate():
         print 'form validated'
         review = Review(next_review_id(dbsession),0,form.content.data,str(formatted_id))
         db.session.add(review)
         db.session.commit()
-        flash('Thanks for submitting an alternate description')
+        flash('Thanks for submitting an alternative description')
     return redirect('/catalog/'+dept+"/"+course_id)
 
 @app.route('/about')
@@ -107,5 +107,3 @@ def go_to_main_page():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-

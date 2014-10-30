@@ -25,7 +25,7 @@ class CourseQueryForm(CustomForm):
                                            ('Skl','Skl'),
                                            ('Wel','Wel')], id="gen_eds")
 
-class AlternativeDescriptionForm(CustomForm):
+class AltDescForm(CustomForm):
     content = TextAreaField('Content',
                             [validators.DataRequired()],
                             id="content")
