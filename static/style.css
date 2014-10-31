@@ -36,6 +36,10 @@ p {}
     text-overflow: ellipsis;
 }
 
+#tips p {
+    text-align: justify;
+}
+
 form {}
 
 .box {
