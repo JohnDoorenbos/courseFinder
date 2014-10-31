@@ -3,53 +3,63 @@
 {% block title %}{{ course.id }} {{ course.title }}{% endblock %}
 
 {% block brand %} {{course.id }} {% endblock brand %}
-{% block content %}
-{{ super() }}  
-<p class="nav_tree">
-  <a href="/catalog">Catalog</a> &#8594
-  <a href="/catalog/{{course.dept}}">{{course.dept}}</a> &#8594
-  <b>{{course.id}}</b>
-</p>
 
-<div class="course">
-  <h2 class="course_title">{{course.id}} {{course.title}}</h2>
-  <p class="course_hours">{{course.hours}}</p>
+    {% block content %}
+    {{ super() }}  
+    <p class="nav_tree">
+      <a href="/catalog">Catalog</a> &#8594
+      <a href="/catalog/{{course.dept}}">{{course.dept}}</a> &#8594
+      <b>{{course.id}}</b>
+    </p>
 
-  <p class="course_details">{{course.desc}}
-    {% if course.prereqs != 'N/A' %}
-    <br/>Prerequisites: {{course.prereqs}}
+    <div class="box row">
+      <h2 class="course_title">{{course.id}} {{course.title}}</h2>
+      <hr>
+      <div class="course_details">
+	<div class="col-sm-8 col-md-9 col-lg-10">
+	  <p>{{course.desc}}</p>
+	</div>
+	
+	<div class="col-sm-4 col-md-3 col-lg-2">
+	  <p>
+            <strong>Hours:</strong> {{course.hours}}<br>
+            <strong>Prereqs:</strong> {{course.prereqs}}<br>
+            <strong>Same as:</strong> {{course.same_as}}<br>
+            <strong>Gen eds:</strong> {{course.gen_eds}}
+	  </p>
+	</div>
+      </div>
+    </div>
+
+    {% if alt_descs|length %}
+    <br>
+
+    <div class="box row">
+      <h2>User-Submitted Descriptions</h2>
+      <div class="alt_desc_list">
+	<br>
+	{% for alt_desc in alt_descs %}
+	<div class="alt_desc">
+	  <p>{{alt_desc.content}}</p>
+	  {% if alt_desc != alt_descs|last() %}
+	  <hr/>
+	  {% endif %}
+	</div>
+	{% endfor %}
+      </div>
+    </div>
     {% endif %}
-    {% if course.same_as != 'N/A' %}
-    <br/>Same as: {{course.same_as}}
-    {% endif %}
-    {% if course.geneds != 'N/A' %}
-    <br/>General education fulfillments: {{course.gen_eds}}
-    {% endif %}
-  </p>
-  
-</div>
 
-{% if alt_descs|length %}
-<h2>User-Submitted Descriptions</h1>
-<div class="alt_desc_list">
-  <br>
-  {% for alt_desc in alt_descs %}
-  <div class="alt_desc">
-    <p>{{alt_desc.content}}</p>
-    {% if alt_desc != alt_descs|last() %}
-    <hr/>
-    {% endif %}
-  </div>
-  {% endfor %}
-</div>
-{% endif %}
+    <div class="row"><br></div>
 
-<h2>Submit Alternative Description</h1>
-<form method="GET", action="/catalog/{{course.dept}}/{{id_to_url(course.id)}}/submit">
-  {% for field in form %}
-  {{ render_field(field) }}
-  {% endfor %}
-  <input type="submit" value="Submit!"/>
-</form>
-
-{% endblock %}
+    <div class="box row">
+      <h2>Submit Alternative Description</h1>
+      <form method="GET", action="/catalog/{{course.dept}}/{{id_to_url(course.id)}}/submit">
+	{% for field in form %}
+	{{ render_field(field) }}
+	{% endfor %}
+	<input type="submit" value="Submit!"/>
+      </form>
+      <br>
+     </div>
+    {% endblock %}

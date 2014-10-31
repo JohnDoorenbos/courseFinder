@@ -36,10 +36,6 @@ p {}
     text-overflow: ellipsis;
 }
 
-#tips p {
-    text-align: justify;
-}
-
 form {}
 
 .box {
@@ -110,20 +106,13 @@ form {}
     font-variant: small-caps;
 }
 
-.lead {}
-
-#title {}
-#dept {}
-#gen_eds {
-    height: 150px;
-    width: 200px;
+#tips p {
+    text-align: justify;
+    padding-left: 20px;
 }
-#stars {}
-#professors {
-    height: 27px;
+#tips p::first-letter {
+    margin-left: -20px;
 }
-#content {
-    height: 150px;
-    width: 500px;
-    max-width: 100%;
+.course_details p {
+    text-align: left;
 }
