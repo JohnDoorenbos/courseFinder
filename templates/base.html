@@ -15,55 +15,54 @@
 
 {% macro id_to_url(course_id) %}{{ course_id|replace(", ","-")|replace(" ","") }}{% endmacro %}
 
-{% block navbar %}
-<link rel="stylesheet" href="/static/style.css">
 
-<div class="navbar navbar-inverse navbar-fixed-top" role="navigation"> 
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> 
-	<span class="sr-only">Toggle navigation</span>
-	<span class="icon-bar"></span>
-	<span class="icon-bar"></span>
-	<span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">{% block brand%} {% endblock%}</a>
+    {% block title %} NorseCourse {% endblock %}
+
+    {% block styles %}
+    {{ super() }}
+
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    {% endblock styles %}
+
+    {% block navbar %}
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation"> 
+      <div class="container-fluid">
+	<div class="navbar-header">
+	  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> 
+	    <span class="sr-only">Toggle navigation</span>
+	    <span class="icon-bar"></span>
+	    <span class="icon-bar"></span>
+	    <span class="icon-bar"></span>
+	  </button>
+	  <a class="navbar-brand" href="#">{% block brand%} {% endblock%}</a>
+	</div>
+	<div class="collapse navbar-collapse">
+	  <ul class="nav navbar-nav">
+	    <li><a href="/coursefinder">Course Finder</a></li>
+	    <li><a href="/catalog">Catalog</a></li>
+	    <!--<li><a href="#contact">Last Page</a></li>-->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Recently Visited<b class="caret"></b></a>
+	      <ul class="dropdown-menu">
+		{% for course in history.courses %}
+		{% with link = "/catalog/"+course.dept+"/"+id_to_url(course.id) %}
+		<li><a href={{link}}>{{course.id}}: {{course.title}}</a></li>
+		{% endwith %}
+		{% endfor%}
+	      </ul>
+	    </li>
+	    <li> <a href="/about"> About</a></li>
+	</div>
+      </div>
     </div>
-    <div class="collapse navbar-collapse">
-      <ul class="nav navbar-nav">
-	<li><a href="/coursefinder">Course Finder</a></li>
-	<li><a href="/catalog">Catalog</a></li>
-	<!--<li><a href="#contact">Last Page</a></li>-->
-	<li class="dropdown">
-	  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Recently Visited<b class="caret"></b></a>
-	  <ul class="dropdown-menu">
-	    {% for course in history.courses %}
-	    {% with link = "/catalog/"+course.dept+"/"+id_to_url(course.id) %}
-	    <li><a href={{link}}>{{course.id}}: {{course.title}}</a></li>
-	    {% endwith %}
-	    {% endfor%}
-	     </ul>
-	</li>
-	<li> <a href="/about"> About</a></li>
-    </div>
-  </div>
-</div>
 
+    <br />
+    <br />   <!-- These lines kept the nav bar from covering up content.-->
+    <br />
+    {% endblock navbar %}
 
-<br />
-<br />   <!-- These lines kept the nav bar from covering up content.-->
-<br />
-
-{% endblock %}
-
-
-  
-<div class="container">
-  <div class="starter-template">
-    
-    {% block content %}         
-    <h1 id="norsecourse">NorseCourse</h1>
-    {% endblock %}
-    
-  </div>
-</div>
+    {% block content %}
+    <h1 id="norsecourse"> NorseCourse </h1>
+    {% endblock content %}
