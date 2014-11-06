@@ -1,14 +1,16 @@
 {% extends "base.html" %}
-{% block brand %} Catalog {% endblock brand%}
-{% block content %}
-{{ super() }}
 
-<div class="dept_list">
-{% for dept in depts %}
-  <p class="col-md-4 col-sm-6 dept"><a href="/catalog/{{dept}}">
-    Catalog for {{dept}}
-  </a></p>
-{% endfor %}
-</div>
+{% block title %} Catalog {% endblock title %}
+{% block brand %} Catalog {% endblock brand %}
+
+    {% block content %}
+    {{ super() }}
+    <div class="dept_list">
+      {% for dept in depts %}
+      <p class="box col-md-4 col-sm-6">
+        <a href="/catalog/{{dept}}"> Catalog for {{dept}} </a>
+      </p>
+      {% endfor %}
+    </div>
 
 {% endblock content %}

@@ -1,23 +1,22 @@
 {% extends "base.html" %}
 
+{% block title %} {{ dept }} {% endblock title %}
 {% block brand %} {{ dept }} {% endblock brand %}
 
-{% block content %}
-{{ super() }}
-<p class="nav_tree">
-  <a href="/catalog">Catalog</a> &#8594
-  <b>{{ dept }}</b>
-</p>
+    {% block content %}
+    {{ super() }}
+    <p class="nav_tree">
+      <a href="/catalog">Catalog</a> &#8594;
+      <b>{{ dept }}</b>
+    </p>
 
-<h1 class="dept_name">{{ dept }} Courses</h1>
-<div class="course_list">
-  {% for course in courses %}
-  <div class="course col-sm-6 col-md-4">
-    <p class="course_title">{{ course.id }}<a href="/catalog/{{dept}}/{{id_to_url(course.id)}}">
-	{{ course.title }}
-    </a></p>
-  </div>
-  {% endfor %}
-</div>
+    <h1 class="dept_name">{{ dept }} Courses</h1>
+    <div class="course_list">
+      {% for course in courses %}
+      <div class="box col-sm-6 col-md-4">
+        <p class="course_title">{{ course.id }}<a href="/catalog/{{dept}}/{{id_to_url(course.id)}}"> {{ course.title }}</a></p>
+      </div>
+      {% endfor %}
+    </div>
 
-{% endblock content %}
+    {% endblock content %}

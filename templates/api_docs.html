@@ -1,29 +1,34 @@
 {% extends "base.html" %}
+
 {% block title %} API Documentation {% endblock%}
 {% block brand %} API Documentation {% endblock brand %}
-{% block content %}
-<h1>API Documentation</h1>
-<div class="course">
- <p>The API for this application allows you to get information from a database containing all of the information that can be found in the course catalog. </p>
-<br /><p> Requests are to be made to <b>norsecourse.herokuapp.com/api</b>. By default it returns a dictionary of the entire database. </p>
-<br /><p>If you would like to make a more specific request, you can specify what information you would like to recieve as if you were filling out a form.</p>
-<br /> <p>For example</p> 
-<ul>
-  <li><b>norsecourse.herokuapp.com/api?dept=rel </b> : Returns all of the courses in the religion department. </li>
-  <li><b>norsecourse.herokuapp.com/api?gen_eds=HB&gen_eds=Quant </b>: Returns a dictionary of all of the courses that satisfy the HB (Human Behavior) or Quant (Quantitative) general education requirements </li>
-  <li><b>norsecourse.herokuapp.com/api?dept=rel&gen_eds=HB</b> : Returns all of the courses in the religion department that satisfy the HB (Human Behavior) general education requirement.</li>
-  <li><b>norsecourse.herokuapp.com/api?id=CS%20365</b> : Returns the course with id CS 365 NOTE: The %20 represents a space.</li>
-</ul>
 
-
-<br /> <p>For a complete reference of searchable parameters see below:</p>
- <ul>
-  <li> <b>title</b>: Search by title keyword (ex: title=Introduction) Note: Case sensitive </li>
-  <li> <b>dept</b>: Search by department name (ex: dept = rel) Note: Case insensitive </li>
-  <li> <b>gen_eds</b>: Search by general education requirements (ex: gen_eds = Quant) Note: you can search for multiple gen_eds by saying <b>gen_eds=HB&gen_eds=HEPT</b>  </li>
-  <li> <b>prereqs</b>: Search by prerequisite classes (ex: prereq s=BIO%20151) Note: %20 represents a space </li>
-  <li> <b>id</b>: Search by course id (ex: id=CS%20365) Note: %20 represents a space </li>
-</ul>
-</div>
-
-{% endblock %}
+    {% block content %}
+    <h1>API Documentation</h1>
+    <div class="box">
+      <p><strong>NOTICE:</strong> development is ongoing, and portions of this documentation might be outdated.</p>
+      <br>
+      <p>The API for this application allows you to get information from a database containing all of the information that can be found in the course catalog. </p>
+      <br>
+      <p> Requests are to be made to <b>norsecourse.herokuapp.com/api</b>. By default it returns a dictionary of the entire database. </p>
+      <br>
+      <p>If you would like to make a more specific request, you can specify what information you would like to recieve as if you were filling out a form.</p>
+      <br>
+      <p>For example</p> 
+      <ul>
+        <li><b>norsecourse.herokuapp.com/api?dept=rel </b> : Returns all of the courses in the religion department. </li>
+        <li><b>norsecourse.herokuapp.com/api?gen_eds=HB&gen_eds=Quant </b>: Returns a dictionary of all of the courses that satisfy the HB (Human Behavior) or Quant (Quantitative) general education requirements </li>
+        <li><b>norsecourse.herokuapp.com/api?dept=rel&gen_eds=HB</b> : Returns all of the courses in the religion department that satisfy the HB (Human Behavior) general education requirement.</li>
+        <li><b>norsecourse.herokuapp.com/api?id=CS%20365</b> : Returns the course with id CS 365 NOTE: The %20 represents a space.</li>
+      </ul>
+      <br>
+      <p>For a complete reference of searchable parameters see below:</p>
+      <ul>
+        <li> <b>title</b>: Search by title keyword (ex: title=Introduction) Note: Case sensitive </li>
+        <li> <b>dept</b>: Search by department name (ex: dept = rel) Note: Case insensitive </li>
+        <li> <b>gen_eds</b>: Search by general education requirements (ex: gen_eds = Quant) Note: you can search for multiple gen_eds by saying <b>gen_eds=HB&gen_eds=HEPT</b>  </li>
+        <li> <b>prereqs</b>: Search by prerequisite classes (ex: prereq s=BIO%20151) Note: %20 represents a space </li>
+        <li> <b>id</b>: Search by course id (ex: id=CS%20365) Note: %20 represents a space </li>
+      </ul>
+    </div>
+    {% endblock content %}
