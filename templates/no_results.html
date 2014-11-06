@@ -1,13 +1,11 @@
 {% extends "base.html" %}
 
-{% block brand %} Results {% endblock brand %}
+    {% block content %}
+    {{ super() }}
 
-{% block content %}
-{{ super() }}
-
-<h1>Results</h1>
-<div class="course">
-  <p>Your search returned no results</p>
-</div>
-
-{% endblock %}
+    <div class="box">
+      <h2>No Results Found</h2>
+      <p>If you entered a department, make sure you typed in a valid abbreviation. See the <a href="/catalog">catalog</a> for a complete list of department abbreviations.</p>
+      <p>If you are searching by keywords, try entering retated words. For example, if you just entered "Rome," try also entering "Roman," "Latin," "Empire," etc.</p>
+    </div>
+    {% endblock %}
