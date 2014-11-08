@@ -1,4 +1,6 @@
 from config import *
+from flask_wtf import Form
+from wtforms import IntegerField, TextAreaField, TextField, BooleanField, SubmitField, SelectMultipleField, validators 
 
 class CustomForm(Form):
     def __init__(self,*args):

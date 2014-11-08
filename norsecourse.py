@@ -1,4 +1,6 @@
 from config import *
+
+from flask import render_template, request, redirect, jsonify, flash
 from dbmodels import Course, AltDesc
 from dbsearch import *
 
