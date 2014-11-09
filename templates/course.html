@@ -40,6 +40,7 @@
         {% for alt_desc in alt_descs -%}
         <hr/>
         <div class="alt_desc">
+          <p class="date">Submitted {{alt_desc.date_submitted}}</p>
           <p>{{alt_desc.content}}</p>
         </div>
         {%- endfor %}

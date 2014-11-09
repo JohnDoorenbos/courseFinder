@@ -72,6 +72,11 @@ form {}
 .course_hours {}
 .course_details {}
 
+.date {
+    text-align: right;
+    font-style: italic;
+}
+
 .dept_list {}
 .dept {
     background-color: #FFFFFF;

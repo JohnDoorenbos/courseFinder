@@ -9,6 +9,8 @@ from stringhelp import listify, id_to_url, id_from_url
 
 from forms import CourseQueryForm, AltDescForm
 
+import datetime, time
+
 dbsession = loadSession()
 
 @app.route('/coursefinder')
@@ -83,7 +85,10 @@ def submit_alt_desc(dept, course_id, methods=['POST','GET']):
     form = AltDescForm(request.args)
     if form.validate():
         print 'form validated'
-        alt_desc = AltDesc(next_alt_desc_id(dbsession),form.content.data,str(formatted_id))
+        alt_desc = AltDesc(next_alt_desc_id(dbsession),
+                           datetime.date.fromtimestamp(time.time()),
+                           form.content.data,
+                           str(formatted_id))
         db.session.add(alt_desc)
         db.session.commit()
         flash('Thanks for submitting an alternative description')

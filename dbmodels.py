@@ -35,11 +35,13 @@ class Course(db.Model):
 class AltDesc(db.Model):
     __tablename__ = "alt_descs"
     alt_desc_id = db.Column(db.Integer, primary_key = True)
+    date_submitted = db.Column(db.Date)
     content = db.Column(db.Text)
     course_id = db.Column(db.Text, db.ForeignKey('courses.id'))
 
-    def __init__(self, alt_desc_id, content, course_id):
+    def __init__(self, alt_desc_id, date_submitted, content, course_id):
         self.alt_desc_id = alt_desc_id
+        self.date_submitted = date_submitted
         self.content = content
         self.course_id = course_id
 
