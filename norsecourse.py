@@ -71,6 +71,8 @@ def course_page(dept, course_id):
     for same_course in listify(course.same_as):
         additional_alt_descs = dbsession.query(AltDescDB).filter(AltDescDB.course_id == same_course)
         alt_desc_list += list(additional_alt_descs)
+    #remove unapproved alt descs
+    alt_desc_list = filter(lambda alt_desc: alt_desc.approved, alt_desc_list)
 
     form = AltDescForm()
         
@@ -86,6 +88,7 @@ def submit_alt_desc(dept, course_id, methods=['POST','GET']):
     if form.validate():
         print 'form validated'
         alt_desc = AltDesc(next_alt_desc_id(dbsession),
+                           False,
                            datetime.date.fromtimestamp(time.time()),
                            form.content.data,
                            str(formatted_id))
