@@ -14,10 +14,9 @@ def approve_alt_descs():
             command = raw_input('Enter \'A\' to approve, \'D\' to delete, or \'S\' to save for later\n> ')
         if command == 'A':
             alt_desc.approved = True
-            db.session.add(alt_desc)
-            db.session.comiit()
+            dbsession.add(alt_desc)
         elif command == 'D':
-            db.session.delete(alt_desc)
-            db.session.commit()
+            dbsession.delete(alt_desc)
         elif command == 'S':
             pass #do nothing
+    dbsession.commit()
