@@ -29,6 +29,7 @@ def loadSession():
     
     Session = sessionmaker(bind=engine)
     session = Session()
+    session._model_changes = {}
     return session
 
 def preprocess_args(args):
