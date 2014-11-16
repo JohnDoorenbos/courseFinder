@@ -16,27 +16,29 @@ STATUS: NOT STARTED
 PRIORITY: MEDIUM
 There is currently no way to get updated information from the course catalog without reinitializing the entire database.
 
-** "reviews" Table
+** "alt_descs" Table
 STATUS: WIP
-PRIORITY: HIGH
-Reviews currently only contain a rating and text. Since we have decided to move away from reviews and towards simply alternate course descriptions, ratings should be removed. Furthermore, information about "up votes", "down votes", whether a review has been flagged as inappropriate, and the date/time the review was submitted should be added. Another consideration is whether a review has been approved, if we choose to only show display reviews after they have been approved. Yet another possibility is to include the IP address of the user who submitted the review, for the possibility of banning IP addresses which abuse the reviews.
+PRIORITY: MEDIUM
+Alternative descriptions contain text, the date submitted, and boolean value for approval. Furthermore, information about "up votes", "down votes", or helpfulness could be added. Yet another possibility is to include the IP address of the user who submitted the review, for the possibility of banning IP addresses which abuse the reviews.
 
 *** Source
 STATUS: WIP
-PRIORITY: HIGH
-Reviews are submitted by users online, but submitions are not monitored or in any way restricted. Submittion will also need to be updated to reflect the changes discussed above.
+PRIORITY: LOW
+Reviews are submitted by users online, but submitions are not displayed until approved.
 
 *** Relationships
 STATUS: DONE
 PRIORITY: N/A
 Reviews have a many-to-one relationship with "courses".
 
+NOTE: We might want to consider a many-to-many relationship with courses, given that some courses have entries with multiple departments.
+
 *** Management
-STATUS: NOT STARTED
-PRIORITY: MEDIUM
+STATUS: WIP
+PRIORITY: LOW
 There are currently no functions to manage reviews. There should be functions to display reviews which have been flagged, have too many downvotes, or have not been approved, and then the ability to set whether or not those reviews should be displayed.
 
-** "gen eds" Table
+** "gen_eds" Table
 STATUS: WIP
 PRIORITY: HIGH
 Currently gen ed fulfillments are a row in the the "courses" table, containing a string representing the list of gen eds a course fulfills. However, it would make sense for "gen eds" to be their own table, with many-to-many relationship with "courses". That would allow easy search for both all the gen eds a course fulfills and all the courses that fulfill a gen ed.
@@ -54,72 +56,75 @@ PRIORITY: HIGH
 "gen eds" should be updated along with "courses" whenever the latest catalog data is gathered.
 
 * User Interface (View)
+Note that anything marked as done might need to be updated
 ** Course Catalog
 *** Catalog Main Page
 *** Department Pages
 *** Course Pages
+
 ** Course Finder
+*** Basic Search
+STATUS: WIP
+PRIORITY: HIGH
+We have a page for basic search. We should integrate basic search into the sidebar so that new searching can be conveniently done from any page.
+*** Advanced Search
+STATUS: NOT STARTED
+PRIORITY: HIGH
+
 ** Alternative Course Descriptions
 Alternative descriptions are submitted on the course pages in the catalog.
+
 ** Schedule Planner
 STATUS: NOT STARTED
 PRIORITY: LOW
 Schedule planner not yet implemented. No related UI.
+
 ** About
+STATUS: DONE
+PRIORITY: N/A
+
 ** API Documentation
+STATUS: WIP
+PRIORITY: MED
+The documentation is out of date. There is a warning at the top of the documentation page. We might want to wait until after the advanced search and related features are implemented to update the documentation.
 
 * Main Features (Controller)
 ** Course Catalog
+STATUS: WIP
+PRIORITY: MED
+Currently, the catalog includes information about regularly offered courses. We should expand it to get data for the spreadsheets about specific sections and semesters. We might also want to expand it to include information about programs for majors and minors.
+
 ** Course Finder
+*** Basic Search
+STATUS: DONE
+PRIORITY: N/A
+*** Advanced Search
+STATUS: NOT STARTED
+PRIORITY: HIGH
+*** History
+STATUS: BROKEN
+PRIORITY: HIGH
+A history of recently visited courses is kept. However, multiple users using the website at or around the same time share the same history. History should be moved to a cookie, which will be unique to users and persistent across sessions.
+
 ** Alternative Course Descriptions
+STATUS: DONE
+PRIORITY: N/A
+
 ** Schedule Planner
+STATUS: NOT STARTED
+PRIORITY: LOW
+Once we had information about specific sections in the catalog, we can work on detecting conflicts between sections, and possibly suggesting schedules given desired credits, courses, gen eds, etc.
+
 ** API
+STATUS: DONE
+PRIORITY: N/A
+The API is finished, and any changes to search will automatically work for the API as well. Once Schedule Planner is implemented, we might need to change the API to work with that as well.
+
+NOTE: The documentation is outdated.
+
 ** Accounts
 STATUS: NOT STARTED
 PRIORITY: LOW
 Once Schedule Planner is implemented, possibly add user accounts (perhaps using gmail) to let users continue sessions across devices.
 
 * Misc Notes and Discussion
-
-* ##### OLD DESIGN DOC #####
-
-** Incorporating Spreadsheet with Detailed Info
-Has section name, min credits, max credits, title, faculty first name, faculty last names, buidling, room, start time, end time, days, 7 weeks
-
-** Searching
-***Title keyword Search is case sensitive
-PRIORITY: MED 
-I added a quick capitalize method to whatever word they search. Couldn't test with heroku because I can't push, but it should work. This only works when the user searchs for one word. 
-NOTE: Title keyword search may be removed in leiu of a general keyword search
-
-***Maybe implement a general keyword search?
-
-
-** Misc-a - 
-*** Page Icon
-PRIORITY: MED
-Now we just have the blank white square. It could be nice to have something like a interlocked N and C instead.
-*** Display maintainence
-**** Mobile Display of results
-PRIORITY: LOW
-The new "..." feature on the results page is super slick, but when you go to a mobile device, you don't see much more than the course_id. Maybe a way to cut out course id and leave the title
-**** Expanding "Cookie Cutter" Dispaly
-PRIORIY: LOW   
-Someone mentioned that the display was pretty basic, which isn't really a big deal, but eventually it may be something we want to improve. Maybe have a persistent search in the side panel.  
-****Centering the form on the page. 
-
-** New Features
-*** Schedule Planner
-**** List of interested courses
-Course pages should have a button to add to the list of courses they are interested in
-**** Detect time conflicts and suggest schedules that work
-**** Warn about prequisites
-**** Suggest courses to fufill specific gen eds
-*** Accounts?
-
-
-** Things to think about
-***incorporating python and javascript
-
-
- 
