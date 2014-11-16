@@ -1,11 +1,13 @@
 from config import *
 
-from flask import render_template, request, redirect, jsonify, flash
+from flask import request, redirect, jsonify, flash, make_response
+from flask import render_template as flask_render_template
 from dbmodels import Course, AltDesc
 from dbsearch import *
 
 from dbmisc import get_depts, next_alt_desc_id
 from stringhelp import listify, id_to_url, id_from_url
+from history import History
 
 from forms import CourseQueryForm, AltDescForm
 
@@ -13,11 +15,21 @@ import datetime, time
 
 dbsession = loadSession()
 
+#custom render template, so we don't need to remember to put in history
+#can handle history if need
+#(used for course pages, so they include themselves in history)
+def render_template(*args,**kwargs):
+    if 'history' not in kwargs:
+        history = History()
+        return flask_render_template(*args, history=history, **kwargs)
+    else:
+        return flask_render_template(*args, **kwargs)
+
 @app.route('/coursefinder')
 def main_page():
     print request.method
     form = CourseQueryForm()
-    return render_template('form.html', form=form, history=history)
+    return render_template('form.html', form=form)
 
 @app.route("/coursefinder/results")
 def results_page(methods=['POST','GET']):
@@ -26,16 +38,14 @@ def results_page(methods=['POST','GET']):
     results = search(dbsession,**args)
     if len(results):
         return render_template("results.html",
-                               courses = results,
-                               history = history)
+                               courses = results)
     else:
-        return render_template("no_results.html",
-                               history = history)
+        return render_template("no_results.html")
 
 @app.route('/catalog')
 def catalog():
     dept_list = sorted(get_depts(dbsession))
-    return render_template('catalog.html',depts=dept_list, history=history)
+    return render_template('catalog.html',depts=dept_list)
 
 @app.route('/catalog/<dept>')
 def dept_page(dept):
@@ -45,7 +55,7 @@ def dept_page(dept):
     course_list = list(res.filter(CourseDB.dept == dept))
     course_list.sort(key = lambda c: c.id)
 
-    return render_template('dept.html',dept=dept,courses=course_list,history=history)
+    return render_template('dept.html',dept=dept,courses=course_list)
 
 @app.route('/catalog/<dept>/<course_id>')
 def course_page(dept, course_id):
@@ -77,9 +87,12 @@ def course_page(dept, course_id):
     form = AltDescForm()
         
     #Appends course title to history
-    history.add(result)
-
-    return render_template("course.html", course=result, form=form, history = history, alt_descs=alt_desc_list)
+    history = History()
+    history.add(course)
+    #Sets history cookie
+    resp = make_response(render_template("course.html", course=result, form=form, alt_descs=alt_desc_list, history=history))
+    resp.set_cookie('history', str(history), max_age=365*24*60*60) #cookie lasts a year
+    return resp
 
 @app.route('/catalog/<dept>/<course_id>/submit')
 def submit_alt_desc(dept, course_id, methods=['POST','GET']):
@@ -99,7 +112,7 @@ def submit_alt_desc(dept, course_id, methods=['POST','GET']):
 
 @app.route('/about')
 def about_page():
-    return render_template('about.html', history = history)
+    return render_template('about.html')
 
 @app.route('/api')
 def api(methods=['POST','GET']):
@@ -109,7 +122,7 @@ def api(methods=['POST','GET']):
 
 @app.route('/api/docs')
 def api_docs():
-    return render_template('api_docs.html', history = history)
+    return render_template('api_docs.html')
 
 @app.route('/')
 def go_to_main_page():

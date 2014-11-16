@@ -56,7 +56,8 @@ PRIORITY: HIGH
 "gen eds" should be updated along with "courses" whenever the latest catalog data is gathered.
 
 * User Interface (View)
-Note that anything marked as done might need to be updated
+Note that anything marked as done might need to be updated as features are added and can always be tweaked.
+
 ** Course Catalog
 *** Catalog Main Page
 *** Department Pages
@@ -102,9 +103,9 @@ PRIORITY: N/A
 STATUS: NOT STARTED
 PRIORITY: HIGH
 *** History
-STATUS: BROKEN
-PRIORITY: HIGH
-A history of recently visited courses is kept. However, multiple users using the website at or around the same time share the same history. History should be moved to a cookie, which will be unique to users and persistent across sessions.
+STATUS: DONE
+PRIORITY: N/A
+A history of recently visited courses is kept and is consistent across sessions. It keeps the last 10 course pages visits.
 
 ** Alternative Course Descriptions
 STATUS: DONE
