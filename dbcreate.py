@@ -16,8 +16,18 @@ def main():
     print 'Creating database'
     #make the db
 
-    for course in course_data:
-        c1  = Course(title = course["title"], dept = course["dept"], number = course["number"], desc = course["desc"],  hours = course["hours"], gen_eds = course["gen_eds"], prereqs = course["prereqs"], professors = [], same_as = course["same_as"], id = course["id"])
+    for course_id in course_data:
+        course = course_data[course_id]
+        c1  = Course(title = course["title"],
+                     dept = course["dept"],
+                     number = course["number"],
+                     desc = course["desc"],
+                     hours = course["hours"],
+                     gen_eds = course["gen_eds"],
+                     prereqs = course["prereqs"],
+                     professors = [],
+                     same_as = course["same_as"],
+                     id = course["id"])
         
         db.session.add(c1)
         db.session.commit()

@@ -218,13 +218,14 @@ def get_course_data(quiet=True):
     course_list.append(cur_course) #append final course
 
     course_list = [postprocess_course(course) for course in course_list]
+    courses_dict = {}
+    for course in course_list:
+        courses_dict[course['id']] = course
 
-    return sorted(course_list, key = lambda c: c['id'])
+    return courses_dict
 
 
 #-----------Beginning of Sections data 
-
-
 
 
 def preprocess_sections(section_data):
@@ -323,7 +324,10 @@ def get_section_data(term):
             section['seven_weeks'] = 'second'
         section_data.append(section)
     
-    return sorted(section_data, key = lambda s: s['id'])
+    sections_dict = {}
+    for section in section_data:
+        sections_dict[section['id']] = section
+    return sections_dict
 
 def get_all_vals(key,term=None):
     '''function for debugging - prints list of all values
