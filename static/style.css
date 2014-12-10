@@ -41,6 +41,10 @@ form {}
 .box {
     background-color: #FFFFFF;
 
+    transition-property: background-color, border-color;
+    transition-duration: 0.25s;
+    transition-timing-function: ease-out;
+
     margin-bottom: 2px;
 
     border-style: solid;

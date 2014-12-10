@@ -65,3 +65,8 @@
     {% block content %}
     <h1 id="norsecourse"> NorseCourse </h1>
     {% endblock content %}
+
+    {% block scripts %}
+    {{ super() }}
+    <script type="text/javascript" src="/static/script.js"></script>
+    {% endblock scripts %}
