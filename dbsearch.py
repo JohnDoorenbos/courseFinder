@@ -2,18 +2,12 @@ from config import *
 
 from sqlalchemy import create_engine, MetaData, Table
 from sqlalchemy.orm import mapper, sessionmaker
+from dbmodels import Course, AltDesc, GenEd
 
 import json
 from collections import OrderedDict
 from stringhelp import listify
  
-class CourseDB(object):
-    pass
-class AltDescDB(object):
-    pass
-
-#----------------------------------------------------------------------
-
 def loadSession():
     """This function generates a session, with which you can make queries to the database."""    
     
@@ -22,10 +16,8 @@ def loadSession():
     metadata = MetaData(engine)
     
     courses = Table('courses', metadata, autoload=True)
-    mapper(CourseDB, courses)
- 
     alt_descs = Table('alt_descs',metadata, autoload=True)
-    mapper(AltDescDB, alt_descs)
+    gen_eds = Table('gen_eds', metadata, autoload=True)
     
     Session = sessionmaker(bind=engine)
     session = Session()
@@ -33,6 +25,11 @@ def loadSession():
     return session
 
 def preprocess_args(args):
+    if 'course_id' in args:
+        course_id = id_from_url(args['course_id'])
+    else:
+        course_id = None
+
     if 'dept' in args:
         dept = args['dept'].upper()
     else:
@@ -57,26 +54,27 @@ def preprocess_args(args):
     else:
         sort = 'alpha'
 
-    return {'dept':dept,
+    return {'course_id':course_id,
+            'dept':dept,
             'keywords':keywords,
-            'gen_eds':gen_eds,
+            'gen_ed_abbrs':gen_eds,
             'sort':sort}
 
 def auto_add_overqualifying(gen_eds,args={}):
     if 'auto_hbssm' in args:
         auto_hbssm = eval(args['auto_hbssm'])
     else:
-        auto_hbssm = True
+        auto_hbssm = True #default include
 
     if 'auto_hept' in args:
         auto_hept = eval(args['auto_hept'])
     else:
-        auto_hept = True
+        auto_hept = True #default include
 
     if 'auto_nwl' in args:
         auto_nwl = eval(args['auto_nwl'])
     else:
-        auto_nwl = False
+        auto_nwl = False #default not include (some people avoid labs)
 
     if auto_hbssm:
         if 'HBSSM' not in gen_eds and 'HB' in gen_eds:
@@ -88,27 +86,19 @@ def auto_add_overqualifying(gen_eds,args={}):
         if 'NWL' not in gen_eds and 'NWNL' in gen_eds:
             gen_eds.append('NWL')
 
-def search(session,dept=None, keywords=[], gen_eds=[], sort=None):
-    res = session.query(CourseDB)
+def search(session, course_id=None, dept=None, keywords=[], gen_ed_abbrs=[], sort=None):
+    res = session.query(Course)
+
+    if course_id:
+        res = res.filter(Course.id == course_id)
 
     if dept:
-        res = res.filter(CourseDB.dept == dept)
+        res = res.filter(Course.dept == dept)
 
-    if gen_eds:
+    if gen_ed_abbrs:
         new_res = None
-        for gen_ed in gen_eds:
-            only_str = gen_ed
-            first_str = gen_ed + ',%' #this gen_ed starts list
-            mid_str = '% ' + gen_ed + ',%' #in middle of lsit
-            last_str = '% ' + gen_ed #at end of list
-            gen_ed_only = res.filter(CourseDB.gen_eds.like(only_str))
-            gen_ed_first = res.filter(CourseDB.gen_eds.like(first_str))
-            gen_ed_mid = res.filter(CourseDB.gen_eds.like(mid_str))
-            gen_ed_last = res.filter(CourseDB.gen_eds.like(last_str))
-            temp_res = gen_ed_only.\
-                       union(gen_ed_first).\
-                       union(gen_ed_mid).\
-                       union(gen_ed_last)
+        for abbr in gen_ed_abbrs:
+            temp_res = res.filter(Course.gen_eds.any(abbr=abbr))
             if new_res: #new_res exists, so combine with temp_res
                 new_res = temp_res.union(new_res)
             else: #new_res is None, so make new_res temp_res
@@ -117,6 +107,7 @@ def search(session,dept=None, keywords=[], gen_eds=[], sort=None):
 
     result_dict = {}
     for course in res:
+        #course_gen_eds = res.filter(Course.gen_eds.all())
         result_dict[course.id] = {'id':course.id,
                           'number':course.number,
                           'dept':course.dept,
@@ -125,7 +116,7 @@ def search(session,dept=None, keywords=[], gen_eds=[], sort=None):
                           'desc':course.desc,
                           'same_as':course.same_as,
                           'prereqs':course.prereqs,
-                          'gen_eds':course.gen_eds}
+                          'gen_eds': ', '.join( [gen_ed.abbr for gen_ed in session.query(GenEd).filter(GenEd.courses.any(id=course.id)) ] ) }
 
     for course in result_dict:
         count = 0
@@ -137,8 +128,8 @@ def search(session,dept=None, keywords=[], gen_eds=[], sort=None):
         gen_ed_list = listify(result_dict[course]['gen_eds'])
         result_dict[course]['gen_ed_count'] = len(gen_ed_list)
         count = 0
-        for gen_ed in gen_eds:
-            if gen_ed in gen_ed_list:
+        for abbr in gen_ed_abbrs:
+            if abbr in gen_ed_list:
                 count += 1
         result_dict[course]['searched_gen_ed_count'] = count
 

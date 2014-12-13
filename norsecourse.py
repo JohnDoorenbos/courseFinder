@@ -51,8 +51,8 @@ def catalog():
 def dept_page(dept):
     dept = dept.upper()
 
-    res = dbsession.query(CourseDB)
-    course_list = list(res.filter(CourseDB.dept == dept))
+    res = dbsession.query(Course)
+    course_list = list(res.filter(Course.dept == dept))
     course_list.sort(key = lambda c: c.id)
 
     return render_template('dept.html',dept=dept,courses=course_list)
@@ -65,24 +65,26 @@ def course_page(dept, course_id):
         return '\''+course_id+'\' is not a valid course id.'
 
     try:
-        res = dbsession.query(CourseDB)
-        result = res.filter(CourseDB.id == formatted_id).one()
+        res = dbsession.query(Course)
+        course = res.filter(Course.id == formatted_id).one()
     except:
         return 'Course \'' + course_id + '\' does not exist.'
 
     #get alt descs for course
-    res = dbsession.query(AltDescDB)
-    alt_desc_list = list(res.filter(AltDescDB.course_id == formatted_id))
+    res = dbsession.query(AltDesc)
+    alt_desc_list = list(res.filter(AltDesc.course_id == formatted_id))
 
     #get alt descs for courses that are the same (like CS220 and MATH220)
     #and concatenate them together
-    res = dbsession.query(CourseDB)
-    course = res.filter(CourseDB.id == formatted_id).one()
     for same_course in listify(course.same_as):
-        additional_alt_descs = dbsession.query(AltDescDB).filter(AltDescDB.course_id == same_course)
+        additional_alt_descs = dbsession.query(AltDesc).filter(AltDesc.course_id == same_course)
         alt_desc_list += list(additional_alt_descs)
+
     #remove unapproved alt descs
     alt_desc_list = filter(lambda alt_desc: alt_desc.approved, alt_desc_list)
+
+    course = search(dbsession, course_id = course.id)
+    course = course[course.keys()[0]]
 
     form = AltDescForm()
         
@@ -90,7 +92,7 @@ def course_page(dept, course_id):
     history = History()
     history.add(course)
     #Sets history cookie
-    resp = make_response(render_template("course.html", course=result, form=form, alt_descs=alt_desc_list, history=history))
+    resp = make_response(render_template("course.html", course=course, form=form, alt_descs=alt_desc_list, history=history))
     resp.set_cookie('history', str(history), max_age=365*24*60*60) #cookie lasts a year
     return resp
 

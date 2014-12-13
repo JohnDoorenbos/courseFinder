@@ -10,7 +10,8 @@ class History:
             self.history = eval(cookie)
 
     def add(self,course):
-        course_dict = {'id':course.id, 'title':course.title, 'dept':course.dept}
+        course_dict = course#{'id':course.id, 'title':course.title, 'dept':course.dept}
+        print course['dept']
         if course_dict in self.history:
             self.history.remove(course_dict)
             self.history.insert(0,course_dict)

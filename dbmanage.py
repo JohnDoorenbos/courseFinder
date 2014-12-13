@@ -1,10 +1,11 @@
 from config import *
-from dbsearch import loadSession, AltDescDB, CourseDB
+from dbmodels import Course, AltDesc, GenEd
+from dbsearch import loadSession
 
 dbsession = loadSession()
 
 def approve_alt_descs():
-    unapproved_alt_descs = list(dbsession.query(AltDescDB).filter(AltDescDB.approved == False))
+    unapproved_alt_descs = list(dbsession.query(AltDesc).filter(AltDesc.approved == False))
     for alt_desc in unapproved_alt_descs:
         print ''
         print 'Submitted: %s' % alt_desc.date_submitted

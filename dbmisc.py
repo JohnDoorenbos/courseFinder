@@ -1,7 +1,7 @@
-from dbsearch import CourseDB, AltDescDB
+from dbsearch import Course, AltDesc, GenEd
 
 def get_depts(session):
-    res = session.query(CourseDB)
+    res = session.query(Course)
 
     dept_list = []
     for course in res:
@@ -11,7 +11,7 @@ def get_depts(session):
     return dept_list
 
 def get_alt_desc_ids(session):
-    res = session.query(AltDescDB)
+    res = session.query(AltDesc)
     alt_desc_id_list = [alt_desc.alt_desc_id for alt_desc in res]
     return alt_desc_id_list
 
