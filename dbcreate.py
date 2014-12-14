@@ -27,32 +27,16 @@ def main():
         course_data_file.close()
         print 'Data saved'
     
+    print 'Initializing database'
     db.drop_all()
     db.create_all()
     
     count = 0
     total = float(len(course_data))
     prev_percent = -5
-    print 'Creating database'
-    #make the db
-
-    print 'Loading gen eds'
-    gen_eds = []
-    for course_id in course_data:
-        for gen_ed in course_data[course_id]['gen_eds'].split(', '):
-            if gen_ed not in gen_eds:
-                gen_eds.append(gen_ed)
-
-    print 'Adding gen eds to database'
-    gen_ed_dict = {}
-    for gen_ed in gen_eds:
-        g = GenEd(abbr=gen_ed)
-        db.session.add(g)
-        if gen_ed not in gen_ed_dict:
-            gen_ed_dict[gen_ed] = g
-    print 'Gen eds added'
 
     print 'Adding courses to database'
+    gen_ed_dict = {}
     for course_id in course_data:
         course = course_data[course_id]
         #gen_eds = course['gen_eds'].split(', ')
@@ -67,6 +51,9 @@ def main():
                    id = course["id"])
 
         for gen_ed_abbr in course['gen_eds'].split(', '):
+            if gen_ed_abbr not in gen_ed_dict:
+                gen_ed_dict[gen_ed_abbr] = GenEd(abbr=gen_ed_abbr)
+                db.session.add(gen_ed_dict[gen_ed_abbr])
             gen_ed_dict[gen_ed_abbr].courses.append(c)
             db.session.add(gen_ed_dict[gen_ed_abbr])
             
