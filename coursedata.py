@@ -314,8 +314,10 @@ def get_section_data(term):
             section['end_time'] = l[9]
         if l[10] == '':
             section['days'] = 'N/A'
-        else: #What's 'TT'?
+        else:
             section['days'] = l[10].replace(' ','')
+            if section['days'] == 'TT':
+                section['days'] = 'TR'
         if l[11] == '':
             section['seven_weeks'] = 'N/A'
         elif re.match('[Ff]irst',l[11]):

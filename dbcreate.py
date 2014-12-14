@@ -1,7 +1,7 @@
 from config import *
 import sys, json
-from dbmodels import Course, AltDesc, GenEd
-from coursedata import get_course_data
+from dbmodels import Course, AltDesc, GenEd, Section
+from coursedata import get_course_data, get_section_data
 
 def main():
     update = False
@@ -31,10 +31,6 @@ def main():
     db.drop_all()
     db.create_all()
     
-    count = 0
-    total = float(len(course_data))
-    prev_percent = -5
-
     print 'Adding courses to database'
     gen_ed_dict = {}
     for course_id in course_data:
@@ -59,13 +55,24 @@ def main():
             
         db.session.add(c)
 
-        count += 1
-        cur_percent = (count/total*100)
-        cur_percent -= cur_percent % 5
-        if cur_percent != prev_percent:
-            print str(int(cur_percent))+' %'
-            prev_percent = cur_percent
-        
+    print 'Adding sections to database'
+    section_data = get_section_data('2014FA')
+    for section_id in section_data:
+        section = section_data[section_id]
+        s = Section( section_id = section_id,
+                     course_id = section['course_id'],
+                     min_credits = int(section['min_credits']),
+                     max_credits = int(section['max_credits']),
+                     title = section['title'],
+                     primary_instructor =section['primary_instructor'],
+                     other_instructors = section['other_instructors'],
+                     room = section['room'],
+                     start_time = section['start_time'],
+                     end_time = section['end_time'],
+                     days = section['days'],
+                     seven_weeks = section['seven_weeks'] )
+        db.session.add(s)
+
     db.session.commit()
     print 'COMPLETE'
 

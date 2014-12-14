@@ -24,6 +24,12 @@ h2 {
     font-size: 20px;
 }
 
+h3 {
+    color: #777777;
+    font-size: 14px;
+    font-weight: bold;
+}
+
 p {}
 .results p {
     white-space: nowrap;

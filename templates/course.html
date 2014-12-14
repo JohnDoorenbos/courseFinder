@@ -31,6 +31,25 @@
       </div>
     </div>
 
+    <br>
+
+    <div class="box row">
+      <h2>Sections</h2>
+      <div class="sections_list">
+        {% for section in sections -%}
+        <hr/>
+        <div class="section">
+          <h3> {{section.section_id}} {{section.title}} </h3>
+          <p>{{section.days}} from {{section.start_time}} to {{section.end_time}} in {{section.room}} {% if section.seven_weeks != 'N/A' %} for the {{section.seven_weeks}} seven weeks {% endif %}</p>
+          <p>Taught by {{section.primary_instructor}} ({{section.min_credits}}{% if section.max_credits != section.min_credits %}-{{section.max_credits}} {% endif %} credit hours)</p>
+        </div>
+	{%- endfor %}
+        {% if not sections|length -%}
+        <p>No sections currently offered</p>
+        {% endif %}
+      </div>
+    </div>
+
     {% if alt_descs|length -%}
     <br>
 

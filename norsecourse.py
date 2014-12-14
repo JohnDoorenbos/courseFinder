@@ -2,7 +2,7 @@ from config import *
 
 from flask import request, redirect, jsonify, flash, make_response
 from flask import render_template as flask_render_template
-from dbmodels import Course, AltDesc
+from dbmodels import Course, AltDesc, Section
 from dbsearch import *
 
 from dbmisc import get_depts, next_alt_desc_id
@@ -83,6 +83,10 @@ def course_page(dept, course_id):
     #remove unapproved alt descs
     alt_desc_list = filter(lambda alt_desc: alt_desc.approved, alt_desc_list)
 
+    sections = dbsession.query(Section).\
+                         filter( Section.course_id == formatted_id )
+    sections = list(sections)
+
     course = search(dbsession, course_id = course.id)
     course = course[course.keys()[0]]
 
@@ -92,7 +96,12 @@ def course_page(dept, course_id):
     history = History()
     history.add(course)
     #Sets history cookie
-    resp = make_response(render_template("course.html", course=course, form=form, alt_descs=alt_desc_list, history=history))
+    resp = make_response( render_template("course.html",
+                                          course=course,
+                                          form=form,
+                                          alt_descs=alt_desc_list,
+                                          sections=sections,
+                                          history=history) )
     resp.set_cookie('history', str(history), max_age=365*24*60*60) #cookie lasts a year
     return resp
 
