@@ -54,6 +54,7 @@ def main():
             db.session.add(gen_ed_dict[gen_ed_abbr])
             
         db.session.add(c)
+    db.session.commit()
 
     print 'Adding sections to database'
     for term in terms:
