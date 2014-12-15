@@ -12,6 +12,7 @@ from history import History
 from forms import CourseQueryForm, AltDescForm
 
 import datetime, time
+from collections import OrderedDict
 
 dbsession = loadSession()
 
@@ -85,13 +86,16 @@ def course_page(dept, course_id):
 
     sections = dbsession.query(Section).\
                          filter( Section.course_id == formatted_id )
-    sections = list(sections)
+    term_offerings = OrderedDict()
+    for term in terms:
+        term_offerings[term] = sections.filter(Section.term==term)
+        term_offerings[term] = list(term_offerings[term])
 
     course = search(dbsession, course_id = course.id)
     course = course[course.keys()[0]]
 
     form = AltDescForm()
-        
+
     #Appends course title to history
     history = History()
     history.add(course)
@@ -100,7 +104,7 @@ def course_page(dept, course_id):
                                           course=course,
                                           form=form,
                                           alt_descs=alt_desc_list,
-                                          sections=sections,
+                                          terms=term_offerings,
                                           history=history) )
     resp.set_cookie('history', str(history), max_age=365*24*60*60) #cookie lasts a year
     return resp

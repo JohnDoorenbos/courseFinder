@@ -260,16 +260,16 @@ def get_section_data(term):
 
     #Make sure a valid term was entered
     #and that data is available for the term
-    if re.match('\d{4}([Ff][Aa])|([Ss][Pp])',term):
+    if re.match('\d{4}([Ff][Aa]|[Ss][Pp])',term):
         try:
             term_file_loc = 'sections/'+term.upper()+'.dat'
             term_file = open(term_file_loc,'r')
         except IOError:
             print 'No data available for ' + term + ' sections.'
-            return []
+            return {}
     else:
         print 'Terms need the four digit year followed by a two-letter code (ie \'FA\' or \'SP\'). \'' + term + '\' is invalid'
-        return []
+        return {}
 
     file_data = preprocess_sections([l.split('|') for l in term_file.readlines()])
     term_file.close()
@@ -277,6 +277,7 @@ def get_section_data(term):
 
     for l in file_data:
         section = {}
+        section['term'] = term.upper()
         section['id'] = l[0].replace('-',' ')
         match = re.match('^([A-Z]+)-(\d{3}).?-[\dA-Z]+$',l[0])
         section['course_id'] = match.group(1) + ' ' + match.group(2)

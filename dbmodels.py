@@ -57,7 +57,9 @@ class GenEd(db.Model):
 
 class Section(db.Model):
     __tablename__ = 'sections'
-    section_id = db.Column(db.Text, primary_key=True)
+    term_and_id = db.Column(db.Text, primary_key=True)
+    section_id = db.Column(db.Text)
+    term = db.Column(db.Text)
     course_id = db.Column(db.Text, db.ForeignKey('courses.id'))
     min_credits = db.Column(db.Integer)
     max_credits = db.Column(db.Integer)
@@ -70,8 +72,10 @@ class Section(db.Model):
     days = db.Column(db.Text)
     seven_weeks = db.Column(db.Text)
 
-    def __init__(self, section_id, course_id, min_credits, max_credits, title, primary_instructor, other_instructors, room, start_time, end_time, days, seven_weeks):
+    def __init__(self, term_and_id, section_id, term, course_id, min_credits, max_credits, title, primary_instructor, other_instructors, room, start_time, end_time, days, seven_weeks):
+        self.term_and_id = term_and_id
         self.section_id = section_id
+        self.term = term
         self.course_id = course_id
         self.min_credits = min_credits
         self.max_credits = max_credits

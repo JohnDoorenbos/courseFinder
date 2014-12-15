@@ -36,6 +36,10 @@
     <div class="box row">
       <h2>Sections</h2>
       <div class="sections_list">
+        {% for term in terms -%}
+        <hr/>
+        <h2>{{term}}</h2>
+        {% with sections = terms[term] -%}
         {% for section in sections -%}
         <hr/>
         <div class="section">
@@ -45,8 +49,10 @@
         </div>
 	{%- endfor %}
         {% if not sections|length -%}
-        <p>No sections currently offered</p>
+        <p>No sections offered</p>
         {% endif %}
+        {%- endwith %}
+        {%- endfor %}
       </div>
     </div>
 

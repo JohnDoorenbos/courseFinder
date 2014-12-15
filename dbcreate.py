@@ -56,22 +56,26 @@ def main():
         db.session.add(c)
 
     print 'Adding sections to database'
-    section_data = get_section_data('2014FA')
-    for section_id in section_data:
-        section = section_data[section_id]
-        s = Section( section_id = section_id,
-                     course_id = section['course_id'],
-                     min_credits = int(section['min_credits']),
-                     max_credits = int(section['max_credits']),
-                     title = section['title'],
-                     primary_instructor =section['primary_instructor'],
-                     other_instructors = section['other_instructors'],
-                     room = section['room'],
-                     start_time = section['start_time'],
-                     end_time = section['end_time'],
-                     days = section['days'],
-                     seven_weeks = section['seven_weeks'] )
-        db.session.add(s)
+    for term in terms:
+        section_data = get_section_data(term)
+        for section_id in section_data:
+            section = section_data[section_id]
+            s = Section( term_and_id = ' '.join((section['term'],
+                                                 section_id)),
+                         term = section['term'],
+                         section_id = section_id,
+                         course_id = section['course_id'],
+                         min_credits = int(section['min_credits']),
+                         max_credits = int(section['max_credits']),
+                         title = section['title'],
+                         primary_instructor = section['primary_instructor'],
+                         other_instructors = section['other_instructors'],
+                         room = section['room'],
+                         start_time = section['start_time'],
+                         end_time = section['end_time'],
+                         days = section['days'],
+                         seven_weeks = section['seven_weeks'] )
+            db.session.add(s)
 
     db.session.commit()
     print 'COMPLETE'

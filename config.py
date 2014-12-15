@@ -17,3 +17,5 @@ else: #or use sqlite locally
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] =  dbPath
+
+terms = ['2014FA','2014SP']
