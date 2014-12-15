@@ -68,14 +68,17 @@ def main():
                          min_credits = int(section['min_credits']),
                          max_credits = int(section['max_credits']),
                          title = section['title'],
-                         primary_instructor = section['primary_instructor'],
+                         primary_instructor =section['primary_instructor'],
                          other_instructors = section['other_instructors'],
                          room = section['room'],
                          start_time = section['start_time'],
                          end_time = section['end_time'],
                          days = section['days'],
                          seven_weeks = section['seven_weeks'] )
-            db.session.add(s)
+            if list(db.session.query(Course).filter(Course.id==s.course_id)):
+                db.session.add(s)
+            else:
+                print 'Error: skipping section "%s" for nonexistent course "%s"'%(s.title,s.course_id)
 
     db.session.commit()
     print 'COMPLETE'
