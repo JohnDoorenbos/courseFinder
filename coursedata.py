@@ -88,18 +88,12 @@ def parse_coursedescriptions(text,course):
     else: #no prereqs, sameas, or geneds -- only desc
         course['desc'] = text
 
-def postprocess_course(course):
+def postprocess_course(course, course_list):
     #performs misc post processing on courses, including
     #assigning appropriate values for missing keys
 
     #set notes to empty list
     course['notes'] = []
-
-    #changes dept of Paideia courses to conform with other depts
-    if course['dept'] == 'Paideia':
-        course['dept'] = 'PAID'
-
-    course['id'] = course['id'].replace('/',', ')
 
     if 'hours' not in course:
         course['hours'] = 'N/A'
@@ -173,6 +167,24 @@ def postprocess_course(course):
     else:
         course['notes'] = '\n'.join(course['notes'])
 
+    #changes dept of Paideia courses to conform with other depts
+    if course['dept'] == 'Paideia':
+        course['dept'] = 'PAID'
+        course['id'] = course['id'].replace('Paideia','PAID')
+
+    if '/' in course['number'] or ',' in course['number']:
+        course['number'].replace('/',',')
+        numbers = [ n.strip() for n in course['number'].split(',') ]
+        course['number'] = numbers[0]
+        for n in numbers[1:]:
+            new_course = {}
+            for key in course:
+                new_course[key] = course[key]
+            new_course['number'] = n
+            new_course['id'] = '%s %s' % (course['dept'], n)
+            course_list.append(new_course)
+
+    course['id'] = '%s %s' % (course['dept'], course['number'])
     return course
 
 def get_course_data(quiet=True):
@@ -217,7 +229,7 @@ def get_course_data(quiet=True):
     
     course_list.append(cur_course) #append final course
 
-    course_list = [postprocess_course(course) for course in course_list]
+    course_list = [postprocess_course(course,course_list) for course in course_list]
     courses_dict = {}
     for course in course_list:
         courses_dict[course['id']] = course
